@@ -16,7 +16,7 @@ if __name__ == "__main__":
     robot = None
     try:
         sensor     = ultrasonic_sensor.UltrasonicSensor()
-        robot      = robot_controller.RobotController()
+        robot      = robot_controller.RobotController(sensor=sensor)
         controller = servo.ServoController()
 
         controller.set_angle(1, ANGLE_CENTER_TETE_GD)
@@ -26,8 +26,7 @@ if __name__ == "__main__":
         gauche       = True
         angle_tete_gd = ANGLE_CENTER_TETE_GD
 
-        threading.Thread(target=robot._surveiller_distance, daemon=True).start()
-        robot.demarrer()
+        robot.start()
 
         while True:
             # Balayage tête
@@ -43,8 +42,5 @@ if __name__ == "__main__":
             time.sleep(0.05)
 
     except KeyboardInterrupt:
-        if robot:
-            robot.mc._set_all_motors(0)
-            robot.desactiver_feux()
+        robot.release()
         controller.set_angle(1, ANGLE_CENTER_TETE_GD)
-        robot.mc.pwm_motor.deinit()
