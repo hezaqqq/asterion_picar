@@ -35,7 +35,7 @@ class RobotController:
         if self.moving:
             return
         self.moving = True
-        self._hazard_off()
+        self._hazard_off().clear()
         self.motors.drive(self.SPEED, ramp_time=1.0)
 
     def stop(self, ramp_time: float = 0.05):
