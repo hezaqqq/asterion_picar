@@ -32,6 +32,7 @@ class StayInZone:
                 self.servos.set_angle(0, self.ANGLE_MIN_ROUE)
                 time.sleep(0.5)
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=1.0)
+                time.sleep(5)
 
             elif (r == 0 and m == 0 and l == 1) or (r == 0 and m == 1 and l == 1):
                 self.robot.stop()
@@ -39,6 +40,7 @@ class StayInZone:
                 self.servos.set_angle(0, self.ANGLE_MAX_ROUE)
                 time.sleep(0.5)
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=1.0)
+                time.sleep(5)
             
             self.robot.motors.drive(self.SPEED_STRAIGHT, ramp_time=0.1)
 
