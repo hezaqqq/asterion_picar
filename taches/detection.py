@@ -16,7 +16,7 @@ if __name__ == "__main__":
     robot = None
     try:
         sensor     = ultrasonic_sensor.UltrasonicSensor()
-        robot      = robot_controller.RobotController(capteur=sensor)
+        robot      = robot_controller.RobotController()
         controller = servo.ServoController()
 
         controller.set_angle(1, ANGLE_CENTER_TETE_GD)
