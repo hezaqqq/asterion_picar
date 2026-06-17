@@ -46,4 +46,3 @@ if __name__ == "__main__":
             robot.stop()
             robot.hazard_off()
         controller.set_angle(1, ANGLE_CENTER_TETE_GD)
-        robot.mc.pwm_motor.deinit()
