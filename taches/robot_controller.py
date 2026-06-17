@@ -20,7 +20,7 @@ class RobotController:
         self.ws_leds.all_off()
 
         self.motors     = motor.MotorController()
-        self.sensor     = ultrasonic_sensor.UltrasonicSensor()
+        self.sensor = sensor if sensor is not None else ultrasonic_sensor.UltrasonicSensor()
 
         self.moving      = False
         self._hazard_on  = False
