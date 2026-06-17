@@ -42,5 +42,8 @@ if __name__ == "__main__":
             time.sleep(0.05)
 
     except KeyboardInterrupt:
-        robot.release()
+        if robot:
+            robot.stop()
+            robot.hazard_off()
         controller.set_angle(1, ANGLE_CENTER_TETE_GD)
+        robot.mc.pwm_motor.deinit()
