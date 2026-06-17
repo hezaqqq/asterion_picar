@@ -2,15 +2,15 @@ import line_reading as line_reading
 import robot_controller as robot
 import servo_controller as servo
 
-ANGLE_CENTER_ROUE    = 100
-ANGLE_MIN_ROUE       = 60
-ANGLE_MAX_ROUE       = 140
-
-SPEED_STRAIGHT = 0.25
-SPEED_CURVE    = 0.20
-SPEED_SLIGHT   = 0.15
-
 class StayInZone:
+
+    ANGLE_CENTER_ROUE    = 100
+    ANGLE_MIN_ROUE       = 60
+    ANGLE_MAX_ROUE       = 140
+
+    SPEED_STRAIGHT = 0.25
+    SPEED_CURVE    = 0.20
+    SPEED_SLIGHT   = 0.15
 
     def __init__(self):
         self.robot   = robot.RobotController()
@@ -19,7 +19,7 @@ class StayInZone:
         self._running = False
 
     def _follow_zone(self):
-        self.robot.SPEED = self.robot.SPEED_STRAIGHT
+        self.robot.SPEED = self.SPEED_STRAIGHT
         self.robot.start()
 
         while self._running:
