@@ -12,7 +12,7 @@ class RobotController:
     OBSTACLE_MM     = 200.0   # distance
     SENSOR_PERIOD   = 0.05    # période du capteur (s)
 
-    def __init__(self):
+    def __init__(self, sensor=None):
         self.gpio_leds  = led.RobotLEDController()
         self.gpio_leds.setup()
 
@@ -20,7 +20,7 @@ class RobotController:
         self.ws_leds.all_off()
 
         self.motors     = motor.MotorController()
-        self.sensor = sensor if sensor is not None else ultrasonic_sensor.UltrasonicSensor()
+        self.sensor     = sensor if sensor is not None else ultrasonic_sensor.UltrasonicSensor()
 
         self.moving      = False
         self._hazard_on  = False
