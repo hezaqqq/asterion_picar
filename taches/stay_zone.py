@@ -1,6 +1,7 @@
 import line_reading as line_reading
 import robot_controller as robot
 import servo_controller as servo
+import time
 
 class StayInZone:
 
@@ -26,14 +27,22 @@ class StayInZone:
             l, m, r = self.line.line_read()
 
             if (r == 1 and m == 0 and l == 0) or (r == 1 and m == 1 and l == 0):
+                self.robot.stop()
+                time.sleep(0.5)
                 self.servos.set_angle(0, self.ANGLE_MIN_ROUE)
+                time.sleep(0.5)
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=1.0)
 
             elif (r == 0 and m == 0 and l == 1) or (r == 0 and m == 1 and l == 1):
+                self.robot.stop()
+                time.sleep(0.5)
                 self.servos.set_angle(0, self.ANGLE_MAX_ROUE)
+                time.sleep(0.5)
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=1.0)
             
             self.robot.motors.drive(self.SPEED_STRAIGHT, ramp_time=0.1)
+
+            time.sleep(0.05)
 
     def run(self):
         self._running = True
