@@ -12,7 +12,7 @@ class StayInZone:
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.20
 
-    REVERSE_TIME   = 1.5
+    REVERSE_TIME   = 2
     RAMP_TIME      = 0.2
 
     def __init__(self):
