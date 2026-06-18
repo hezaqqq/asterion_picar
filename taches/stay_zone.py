@@ -71,7 +71,6 @@ class StayInZone:
             self.robot.hazard_off()
 
 if __name__ == "__main__":
-    detect = detection()
-    detect.run()
+    detection().run()
     stay_in_zone = StayInZone()
     stay_in_zone.run()
