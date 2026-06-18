@@ -36,7 +36,7 @@ class LineFollowingController:
         self.robot.start()
 
         while self._running:
-            l, m, r = self.line.read()
+            l, m, r = self.line.line_read()
 
             if r == 0 and m == 1 and l == 0:
                 current_angle = self.ANGLE_CENTER
