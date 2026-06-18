@@ -33,7 +33,7 @@ class StayInZone:
                 self.servos.set_angle(0, self.ANGLE_MIN_ROUE)
                 self.robot.stop()
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=0.2)
-                time.sleep(self.REVERSE_TIME)
+                time.sleep(self.REVERSE_TIME+1)
                 self.robot.stop()
                 self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
                 self.robot.SPEED = self.SPEED_STRAIGHT
@@ -43,7 +43,7 @@ class StayInZone:
                 self.servos.set_angle(0, self.ANGLE_MAX_ROUE)
                 self.robot.stop()
                 self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=0.2)
-                time.sleep(self.REVERSE_TIME)
+                time.sleep(self.REVERSE_TIME+1)
                 self.robot.stop()
                 self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
                 self.robot.SPEED = self.SPEED_STRAIGHT
