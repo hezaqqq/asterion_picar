@@ -127,5 +127,5 @@ if __name__ == "__main__":
         controller.start()
     except KeyboardInterrupt:
         if robot:
-            controller.robot.stop()
-            controller.robot.hazard_off()
+            robot.stop()
+            robot.hazard_off()
