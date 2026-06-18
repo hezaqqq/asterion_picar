@@ -1,70 +1,68 @@
+# obstacle_avoidance.py
+
 import robot_controller as robot_controller
 import ultrasonic_sensor as ultrasonic_sensor
 import servo_controller as servo
-
 import time
-import threading
 
 ANGLE_CENTER_ROUE    = 100
-ANGLE_MIN_ROUE       = 60
-ANGLE_MAX_ROUE       = 140
-
 ANGLE_CENTER_TETE_GD = 108
 ANGLE_MIN_TETE_GD    = 48
 ANGLE_MAX_TETE_GD    = 168
 
-if __name__ == "__main__":
-    robot = None
-    try:
-        sensor = ultrasonic_sensor.UltrasonicSensor()
-        robot = robot_controller.RobotController(sensor=sensor)
-        servos = servo.ServoController()
+class detection:
 
-        servos.set_angle(1, ANGLE_CENTER_TETE_GD)
-        servos.set_angle(2, 75)
-        servos.set_angle(0, ANGLE_CENTER_ROUE)
+    def __init__(self):
+        self.sensor  = ultrasonic_sensor.UltrasonicSensor()
+        self.robot   = robot_controller.RobotController(sensor=self.sensor)
+        self.servos  = servo.ServoController()
+        self._running = False
 
-        gauche       = True
+    def run(self):
+        self.servos.set_angle(1, ANGLE_CENTER_TETE_GD)
+        self.servos.set_angle(2, 75)
+        self.servos.set_angle(0, ANGLE_CENTER_ROUE)
+
+        gauche        = True
         angle_tete_gd = ANGLE_CENTER_TETE_GD
-        around = False
+        around        = False
+        self._running = True
 
-        while True:
-            # Balayage tête
-            
-            if gauche:
-                angle_tete_gd += 1
-                if angle_tete_gd >= ANGLE_MAX_TETE_GD:
-                    gauche = False
-            else:
-                angle_tete_gd -= 1
-                if angle_tete_gd <= ANGLE_MIN_TETE_GD:
-                    gauche = True
-            
-            if sensor.get_distance_mm() < 150 and around == False:
-                around = True
-                angle_before_around = angle_tete_gd
-                if 48 <= angle_tete_gd <=108:
-                    servos.set_angle(0, ANGLE_CENTER_ROUE+30)
-                    time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE-30)
-                    time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE) 
-                    around = False
-                
+        try:
+            while self._running:
+                if gauche:
+                    angle_tete_gd += 1
+                    if angle_tete_gd >= ANGLE_MAX_TETE_GD:
+                        gauche = False
                 else:
-                    servos.set_angle(0, ANGLE_CENTER_ROUE-30)
-                    time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE+30)
-                    time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE) 
+                    angle_tete_gd -= 1
+                    if angle_tete_gd <= ANGLE_MIN_TETE_GD:
+                        gauche = True
+
+                if self.sensor.get_distance_mm() < 150 and not around:
+                    around = True
+                    if ANGLE_MIN_TETE_GD <= angle_tete_gd <= ANGLE_CENTER_TETE_GD:
+                        self.servos.set_angle(0, ANGLE_CENTER_ROUE + 30)
+                        time.sleep(3)
+                        self.servos.set_angle(0, ANGLE_CENTER_ROUE - 30)
+                        time.sleep(3)
+                    else:
+                        self.servos.set_angle(0, ANGLE_CENTER_ROUE - 30)
+                        time.sleep(3)
+                        self.servos.set_angle(0, ANGLE_CENTER_ROUE + 30)
+                        time.sleep(3)
+                    self.servos.set_angle(0, ANGLE_CENTER_ROUE)
                     around = False
 
+                self.servos.set_angle(1, angle_tete_gd)
+                time.sleep(0.05)
 
-            servos.set_angle(1, angle_tete_gd)
-            time.sleep(0.05)
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.robot.stop()
+            self.robot.hazard_off()
+            self.servos.set_angle(1, ANGLE_CENTER_TETE_GD)
 
-    except KeyboardInterrupt:
-        if robot:
-            robot.stop()
-            robot.hazard_off()
-        servos.set_angle(1, ANGLE_CENTER_TETE_GD)
+if __name__ == "__main__":
+    detection().run()

@@ -1,6 +1,7 @@
 import line_reading as line_reading
 import robot_controller as robot
 import servo_controller as servo
+import detection as detection
 import time
 
 class StayInZone:
@@ -70,5 +71,7 @@ class StayInZone:
             self.robot.hazard_off()
 
 if __name__ == "__main__":
+    detect = detection()
+    detect.run()
     stay_in_zone = StayInZone()
     stay_in_zone.run()
