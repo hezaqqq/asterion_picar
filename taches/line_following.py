@@ -44,22 +44,22 @@ class LineFollowingController:
                 hole_start       = None
 
             elif r == 1 and m == 0 and l == 0:         # ligne à droite → virer à droite
-                current_angle   += 12
+                current_angle   += 13
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
             elif r == 0 and m == 0 and l == 1:         # ligne à gauche → virer à gauche
-                current_angle   -= 12
+                current_angle   -= 13
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
             elif r == 1 and m == 1 and l == 0:         # légèrement à droite
-                current_angle   += 6
+                current_angle   += 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
 
             elif r == 0 and m == 1 and l == 1:         # légèrement à gauche
-                current_angle   -= 6
+                current_angle   -= 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
 
