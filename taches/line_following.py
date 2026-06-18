@@ -133,7 +133,6 @@ class LineFollowingController:
         self.servos.release()
         self.robot.stop()
         self.robot.hazard_off()
-        self.robot.mc.destroy()
 
 
 if __name__ == "__main__":
