@@ -3,6 +3,7 @@ import robot_controller as robot
 import servo_controller as servo
 import detection as detection
 import time
+import threading
 
 class StayInZone:
 
@@ -72,6 +73,8 @@ class StayInZone:
 
 if __name__ == "__main__":
     detect = detection.detection()
-    detect.run()
+    t = threading.Thread(target=detect.run, daemon=True)
+    t.start()
+
     stay_in_zone = StayInZone()
     stay_in_zone.run()
