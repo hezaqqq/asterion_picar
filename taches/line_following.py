@@ -136,5 +136,9 @@ class LineFollowingController:
 
 
 if __name__ == "__main__":
-    controller = LineFollowingController()
-    controller.start()
+    try:
+        controller = LineFollowingController()
+        controller.start()
+    except KeyboardInterrupt:
+        controller.robot.stop()
+        controller.robot.hazard_off()
