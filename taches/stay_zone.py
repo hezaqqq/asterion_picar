@@ -12,7 +12,7 @@ class StayInZone:
     SPEED_STRAIGHT = 0.35
     SPEED_CURVE    = 0.30
 
-    REVERSE_TIME   = 1.5   # durée du recul (s)
+    REVERSE_TIME   = 0.75   # durée du recul (s)
     RAMP_TIME      = 0.2   # durée de la rampe moteur (s)
 
     def __init__(self):
