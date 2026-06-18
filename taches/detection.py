@@ -42,7 +42,7 @@ if __name__ == "__main__":
                     gauche = True
             servos.set_angle(1, angle_tete_gd)
 
-            dist = sensor.get_distance()
+            dist = sensor.get_distance_mm()
 
             if dist is not None and dist < OBSTACLE_DIST_CM:
                 # Obstacle donc on va vers le côté opposé à la tête
