@@ -31,11 +31,11 @@ class detection:
         try:
             while self._running:
                 if gauche:
-                    angle_tete_gd += 1
+                    angle_tete_gd += 5
                     if angle_tete_gd >= ANGLE_MAX_TETE_GD:
                         gauche = False
                 else:
-                    angle_tete_gd -= 1
+                    angle_tete_gd -= 5
                     if angle_tete_gd <= ANGLE_MIN_TETE_GD:
                         gauche = True
 
