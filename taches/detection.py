@@ -7,8 +7,8 @@ import time
 
 ANGLE_CENTER_ROUE    = 100
 ANGLE_CENTER_TETE_GD = 108
-ANGLE_MIN_TETE_GD    = 48
-ANGLE_MAX_TETE_GD    = 168
+ANGLE_MIN_TETE_GD    = 18
+ANGLE_MAX_TETE_GD    = 198
 
 class detection:
 
@@ -22,6 +22,7 @@ class detection:
         self.servos.set_angle(1, ANGLE_CENTER_TETE_GD)
         self.servos.set_angle(2, 75)
         self.servos.set_angle(0, ANGLE_CENTER_ROUE)
+        self.robot.start()
 
         gauche        = True
         angle_tete_gd = ANGLE_CENTER_TETE_GD
@@ -31,11 +32,11 @@ class detection:
         try:
             while self._running:
                 if gauche:
-                    angle_tete_gd += 5
+                    angle_tete_gd += 10
                     if angle_tete_gd >= ANGLE_MAX_TETE_GD:
                         gauche = False
                 else:
-                    angle_tete_gd -= 5
+                    angle_tete_gd -= 10
                     if angle_tete_gd <= ANGLE_MIN_TETE_GD:
                         gauche = True
 
