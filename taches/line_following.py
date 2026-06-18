@@ -12,9 +12,9 @@ class LineFollowingController:
     ANGLE_MAX      = 140
     HOLE_TIMEOUT   = 0.5   # durée max d'un trou blanc à ignorer (s)
 
-    SPEED_STRAIGHT = 0.4
-    SPEED_CURVE    = 0.3
-    SPEED_SLIGHT   = 0.35
+    SPEED_STRAIGHT = 0.35
+    SPEED_CURVE    = 0.25
+    SPEED_SLIGHT   = 0.30
 
     def __init__(self):
         self.robot    = robot.RobotController()
@@ -44,22 +44,22 @@ class LineFollowingController:
                 hole_start       = None
 
             elif r == 1 and m == 0 and l == 0:         # ligne à droite → virer à droite
-                current_angle   += 20
+                current_angle   += 10
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
             elif r == 0 and m == 0 and l == 1:         # ligne à gauche → virer à gauche
-                current_angle   -= 20
+                current_angle   -= 10
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
             elif r == 1 and m == 1 and l == 0:         # légèrement à droite
-                current_angle   += 10
+                current_angle   += 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
 
             elif r == 0 and m == 1 and l == 1:         # légèrement à gauche
-                current_angle   -= 10
+                current_angle   -= 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
 
@@ -75,7 +75,7 @@ class LineFollowingController:
                 elapsed = time.time() - hole_start
 
                 if elapsed <= self.HOLE_TIMEOUT:
-                    # Trou blanc → on continue sans rien changer
+                    # Trou blanc donc on continue sans rien changer
                     pass
 
                 else:
