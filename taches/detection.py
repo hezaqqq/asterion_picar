@@ -10,8 +10,8 @@ ANGLE_MIN_ROUE       = 60
 ANGLE_MAX_ROUE       = 140
 
 ANGLE_CENTER_TETE_GD = 108
-ANGLE_MIN_TETE_GD    = 78
-ANGLE_MAX_TETE_GD    = 138
+ANGLE_MIN_TETE_GD    = 58
+ANGLE_MAX_TETE_GD    = 158
 
 if __name__ == "__main__":
     robot = None
