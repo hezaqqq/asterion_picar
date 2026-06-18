@@ -9,10 +9,10 @@ class StayInZone:
     ANGLE_MIN_ROUE    = 60
     ANGLE_MAX_ROUE    = 140
 
-    SPEED_STRAIGHT = 0.35
-    SPEED_CURVE    = 0.30
+    SPEED_STRAIGHT = 0.25
+    SPEED_CURVE    = 0.20
 
-    REVERSE_TIME   = 1
+    REVERSE_TIME   = 1.5
     RAMP_TIME      = 0.2
 
     def __init__(self):
