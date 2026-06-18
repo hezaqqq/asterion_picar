@@ -10,7 +10,7 @@ class LineFollowingController:
     ANGLE_CENTER = 100
     ANGLE_MIN    = 60
     ANGLE_MAX    = 140
-    HOLE_TIMEOUT = 1   # durée max d'un trou blanc à ignorer (s)
+    HOLE_TIMEOUT = 0.5   # durée max d'un trou blanc à ignorer (s)
 
     SPEED_STRAIGHT = 0.40
     SPEED_CURVE    = 0.30
