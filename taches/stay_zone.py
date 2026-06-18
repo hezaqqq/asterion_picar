@@ -26,7 +26,7 @@ class StayInZone:
         self.servos.set_angle(0, steer_angle)
         time.sleep(0.1)
 
-        self.robot.mc.drive_ramp(-self.SPEED_CURVE, ramp_time=self.RAMP_TIME)
+        self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=self.RAMP_TIME)
         time.sleep(self.REVERSE_TIME)
 
         self.robot.stop()
