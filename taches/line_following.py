@@ -120,3 +120,10 @@ class LineFollowingController:
         self.servos.set_angle(0, self.ANGLE_CENTER)
         self.servos.release()
         self.robot.release()
+
+if __name__ == "__main__":
+    controller = LineFollowingController()
+    try:
+        controller.start()
+    except KeyboardInterrupt:
+        controller.stop()
