@@ -41,6 +41,7 @@ if __name__ == "__main__":
                     gauche = True
             
             if sensor.get_distance_mm() < 150 and around == False:
+                around = True
                 angle_before_around = angle_tete_gd
                 if 48 <= angle_tete_gd <=108:
                     servos.set_angle(0, ANGLE_CENTER_ROUE-20)
@@ -48,6 +49,7 @@ if __name__ == "__main__":
                     servos.set_angle(0, ANGLE_CENTER_ROUE+20)
                     time.sleep(3)
                     servos.set_angle(0, ANGLE_CENTER_ROUE) 
+                    around = False
                 
                 else:
                     servos.set_angle(0, ANGLE_CENTER_ROUE+20)
@@ -55,7 +57,8 @@ if __name__ == "__main__":
                     servos.set_angle(0, ANGLE_CENTER_ROUE-20)
                     time.sleep(3)
                     servos.set_angle(0, ANGLE_CENTER_ROUE) 
-                    
+                    around = False
+
 
             servos.set_angle(1, angle_tete_gd)
             time.sleep(0.05)
