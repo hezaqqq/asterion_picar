@@ -1,4 +1,4 @@
-# obstacle_avoidance.py
+# detection.py
 
 import robot_controller as robot_controller
 import ultrasonic_sensor as ultrasonic_sensor
@@ -12,10 +12,10 @@ ANGLE_MAX_TETE_GD    = 168
 
 class detection:
 
-    def __init__(self):
-        self.sensor  = ultrasonic_sensor.UltrasonicSensor()
-        self.robot   = robot_controller.RobotController(sensor=self.sensor)
-        self.servos  = servo.ServoController()
+    def __init__(self, robot=None, servos=None, sensor=None):
+        self.sensor  = sensor  or ultrasonic_sensor.UltrasonicSensor()
+        self.robot   = robot   or robot_controller.RobotController(sensor=self.sensor)
+        self.servos  = servos  or servo.ServoController()
         self._running = False
 
     def run(self):

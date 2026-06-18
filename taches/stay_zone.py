@@ -17,12 +17,12 @@ class StayInZone:
     REVERSE_TIME   = 2
     RAMP_TIME      = 0.2
 
-    def __init__(self):
-        self.robot        = robot.RobotController()
-        self.line         = line_reading.LineReading()
-        self.servos       = servo.ServoController()
-        self._running     = False
-        self._last_side   = self.ANGLE_MAX_ROUE  # dernier côté détecté 
+    def __init__(self, robot=None, servos=None):
+        self.robot    = robot  or robot_module.RobotController()
+        self.line     = line_reading.LineReading()
+        self.servos   = servos or servo.ServoController()
+        self._running = False
+        self._last_side = self.ANGLE_MAX_ROUE
 
     def _reverse(self, steer_angle: float):
         self.robot.stop()
@@ -72,9 +72,28 @@ class StayInZone:
             self.robot.hazard_off()
 
 if __name__ == "__main__":
-    detect = detection.detection()
+    import ultrasonic_sensor as ultrasonic_sensor
+    import robot_controller as robot_controller
+    import servo_controller as servo_controller
+    import threading
+
+    # ── Une seule instance de chaque hardware ────────────────────────
+    sensor       = ultrasonic_sensor.UltrasonicSensor()
+    shared_robot  = robot_controller.RobotController(sensor=sensor)
+    shared_servos = servo_controller.ServoController()
+
+    # ── Detection reçoit les instances partagées ─────────────────────
+    detect = detection.detection(
+        robot=shared_robot,
+        servos=shared_servos,
+        sensor=sensor,
+    )
     t = threading.Thread(target=detect.run, daemon=True)
     t.start()
 
-    stay_in_zone = StayInZone()
+    # ── StayInZone reçoit les mêmes instances ────────────────────────
+    stay_in_zone = StayInZone(
+        robot=shared_robot,
+        servos=shared_servos,
+    )
     stay_in_zone.run()
