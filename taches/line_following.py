@@ -13,8 +13,8 @@ class LineFollowingController:
     HOLE_TIMEOUT   = 1   # durée max d'un trou blanc à ignorer (s)
 
     SPEED_STRAIGHT = 0.35
-    SPEED_CURVE    = 0.27
-    SPEED_SLIGHT   = 0.30
+    SPEED_CURVE    = 0.30
+    SPEED_SLIGHT   = 0.325
 
     def __init__(self):
         self.robot    = robot.RobotController()
