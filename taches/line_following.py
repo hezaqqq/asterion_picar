@@ -86,7 +86,7 @@ class LineFollowingController:
                     if self.robot.moving:
                         self.robot.stop()
                         self.servos.set_angle(0, current_angle)
-                        self.robot.mc.drive_ramp(
+                        self.robot.motors.drive(
                             -self.robot.SPEED,
                             ramp_time=elapsed + 0.5,
                         )
