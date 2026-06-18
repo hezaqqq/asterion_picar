@@ -44,17 +44,17 @@ if __name__ == "__main__":
                 around = True
                 angle_before_around = angle_tete_gd
                 if 48 <= angle_tete_gd <=108:
-                    servos.set_angle(0, ANGLE_CENTER_ROUE-20)
+                    servos.set_angle(0, ANGLE_CENTER_ROUE+30)
                     time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE+20)
+                    servos.set_angle(0, ANGLE_CENTER_ROUE-30)
                     time.sleep(3)
                     servos.set_angle(0, ANGLE_CENTER_ROUE) 
                     around = False
                 
                 else:
-                    servos.set_angle(0, ANGLE_CENTER_ROUE+20)
+                    servos.set_angle(0, ANGLE_CENTER_ROUE-30)
                     time.sleep(3)
-                    servos.set_angle(0, ANGLE_CENTER_ROUE-20)
+                    servos.set_angle(0, ANGLE_CENTER_ROUE+30)
                     time.sleep(3)
                     servos.set_angle(0, ANGLE_CENTER_ROUE) 
                     around = False
