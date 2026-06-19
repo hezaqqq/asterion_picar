@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 # True = webcam pour test, False = camera du robot
-USE_ORDINATEUR_CAMERA = True
+USE_ORDINATEUR_CAMERA = False
 
 ARROW_REF = np.array([
     [0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]
