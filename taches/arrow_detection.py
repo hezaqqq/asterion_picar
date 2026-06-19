@@ -36,6 +36,44 @@ def read_frame(cam):
         return cam.capture_array()
 
 
+#!/usr/bin/env python3
+# coding: utf-8
+
+import cv2
+import numpy as np
+import threading
+from flask import Flask, Response
+
+# True = webcam pour test, False = camera du robot
+USE_ORDINATEUR_CAMERA = False
+
+ARROW_REF = np.array([
+    [0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]
+], dtype=np.int32).reshape(-1, 1, 2)
+
+latest_frame = None
+lock = threading.Lock()
+
+
+def get_camera():
+    if USE_ORDINATEUR_CAMERA:
+        return cv2.VideoCapture(0)
+    else:
+        from picamera2 import Picamera2
+        cam = Picamera2()
+        cam.configure(cam.create_preview_configuration(main={"size": (640, 480), "format": "RGB888"}))
+        cam.start()
+        return cam
+
+
+def read_frame(cam):
+    if USE_ORDINATEUR_CAMERA:
+        ok, frame = cam.read()
+        return frame if ok else None
+    else:
+        return cam.capture_array()
+
+
 def detect_direction(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -94,6 +132,77 @@ def gen_stream():
             ok, jpg = cv2.imencode('.jpg', latest_frame)
         if ok:
             yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + jpg.tobytes() + b'\r\n')
+
+@app.route('/')
+def index():
+    return '<img src="/stream">'
+
+@app.route('/stream')
+def stream():
+    return Response(gen_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def run_server():
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+
+
+def main():
+    global latest_frame
+    cam = get_camera()
+    history = []
+
+    if not USE_ORDINATEUR_CAMERA:
+        threading.Thread(target=run_server, daemon=True).start()
+
+    try:
+        while True:
+            frame = read_frame(cam)
+            if frame is None:
+                continue
+
+            direction, frame = detect_direction(frame)
+
+            history.append(direction)
+            if len(history) > 5:
+                history.pop(0)
+            stable = direction if history.count(direction) >= 3 else None
+
+            if stable:
+                print(stable)
+
+            if USE_ORDINATEUR_CAMERA:
+                cv2.imshow("Arrow Detection", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            else:
+                with lock:
+                    latest_frame = frame
+
+    except KeyboardInterrupt:
+        print("Arret demande.")
+
+    finally:
+        if USE_ORDINATEUR_CAMERA:
+            cam.release()
+        else:
+            cam.stop()
+        cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    main()
+
+
+app = Flask(__name__)
+
+def gen_stream():
+    global latest_frame
+    while True:
+        with lock:
+            if latest_frame is None:
+                continue
+            gray = cv2.cvtColor(latest_frame, cv2.COLOR_BGR2GRAY)
+            _, dbg = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
+            ok, jpg = cv2.imencode('.jpg', dbg)
 
 @app.route('/')
 def index():
