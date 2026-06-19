@@ -40,7 +40,7 @@ class detection:
                     if angle_tete_gd <= ANGLE_MIN_TETE_GD:
                         gauche = True
 
-                if self.sensor.get_distance_mm() < 150 and not around:
+                if self.sensor.get_distance_mm() < 250 and not around:
                     around = True
                     if ANGLE_MIN_TETE_GD <= angle_tete_gd <= ANGLE_CENTER_TETE_GD:
                         self.servos.set_angle(0, ANGLE_CENTER_ROUE + 30)

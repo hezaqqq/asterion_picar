@@ -13,7 +13,7 @@ class RobotController:
     OBSTACLE_MM     = 200.0   # distance seuil en mm
     SENSOR_PERIOD   = 0.05    # période du capteur (s)
 
-    def __init__(self, sensor=None):
+    def __init__(self, sensor=None, auto_watch=True):
         self.gpio_leds  = led.RobotLEDController()
         self.gpio_leds.setup()
 
@@ -23,9 +23,10 @@ class RobotController:
         self.motors     = motor.MotorController()
         self.sensor     = sensor if sensor is not None else ultrasonic_sensor.UltrasonicSensor()
 
-        self.moving        = False
+        self.moving         = False
         self._hazard_active = False
-        self._stop_hazard  = threading.Event()
+        self._stop_hazard   = threading.Event()
+        self._watch_enabled = auto_watch
 
         threading.Thread(target=self._watch_distance, daemon=True).start()
 
@@ -68,7 +69,7 @@ class RobotController:
 
     def _watch_distance(self):
         while True:
-            if self.moving:
+            if self.moving and self._watch_enabled:
                 dist = self.sensor.get_distance_mm()
                 if dist < self.OBSTACLE_MM:
                     self.stop()
