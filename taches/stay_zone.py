@@ -24,13 +24,12 @@ class StayInZone:
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
-        self.robot     = robot_module.RobotController(sensor=self.sensor)
+        self.robot     = robot_module.RobotController(sensor=self.sensor, auto_watch=False)
         self.line      = line_reading.LineReading()
         self.servos    = servo_module.ServoController()
         self._running  = False
-        self._last_side = self.ANGLE_MAX_ROUE  # dernier côté de ligne détecté
+        self._last_side = self.ANGLE_MAX_ROUE
 
-        # État du balayage de tête (remplace les variables locales de detection.py)
         self._gauche        = True
         self._angle_tete_gd = self.ANGLE_CENTER_TETE_GD
 
@@ -86,28 +85,25 @@ class StayInZone:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
             return False
 
-        self.robot._watch_enabled = False   # suspend la surveillance auto
-
-        # On reste/redémarre en mouvement AVANT de braquer
         self.robot.SPEED = self.SPEED_CURVE
         if not self.robot.moving:
             self.robot.start()
 
         if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
-            time.sleep(1.5)
+            time.sleep(1.0)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
-            time.sleep(1.5)
+            time.sleep(1.0)
         else:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
-            time.sleep(1.5)
+            time.sleep(1.0)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
-            time.sleep(1.5)
+            time.sleep(1.0)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
-        self.robot.hazard_off()
         self.robot.SPEED = self.SPEED_STRAIGHT
-        self.robot._watch_enabled = True
+        if not self.robot.moving:
+            self.robot.start()
         return True
 
     # ── Boucle principale ────────────────────────────────────────────
