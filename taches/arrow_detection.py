@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
 import cv2
 import numpy as np
 
 # True = webcam pour test, False = camera du robot
-USE_ORDINATEUR_CAMERA = False
+USE_ORDINATEUR_CAMERA = True
+
+ARROW_REF = np.array([
+    [0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]
+], dtype=np.int32).reshape(-1, 1, 2)
+
 
 def get_camera():
     if USE_ORDINATEUR_CAMERA:
@@ -14,23 +22,18 @@ def get_camera():
         cam.start()
         return cam
 
+
 def read_frame(cam):
     if USE_ORDINATEUR_CAMERA:
         ok, frame = cam.read()
         return frame if ok else None
     else:
         return cam.capture_array()
-    
-# forme de reference d'une fleche pointant a droite
-ARROW_REF = np.array([
-    [0, 30], [60, 30], [60, 10], [100, 50], [60, 90], [60, 70], [0, 70]
-], dtype=np.int32).reshape(-1, 1, 2)
 
 
 def detect_direction(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
-
     _, thresh = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
 
     cnts, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -39,7 +42,7 @@ def detect_direction(frame):
 
     h, w = frame.shape[:2]
     best = None
-    best_score = 0.25  # plus bas = plus strict
+    best_score = 0.15  # plus bas = plus strict, donc moins de fausses detections
 
     for c in cnts:
         area = cv2.contourArea(c)
@@ -66,9 +69,8 @@ def detect_direction(frame):
     cx = int(M["m10"] / M["m00"])
     cy = int(M["m01"] / M["m00"])
 
-    peri = cv2.arcLength(c, True)
-    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-    pts = approx.reshape(-1, 2)
+    # pointe = point du contour complet le plus loin du centre
+    pts = c.reshape(-1, 2)
     dists = np.linalg.norm(pts - [cx, cy], axis=1)
     tip = pts[np.argmax(dists)]
 
@@ -81,21 +83,37 @@ def detect_direction(frame):
 
     return direction, frame
 
+
 def main():
     cam = get_camera()
+    history = []
+
     while True:
         frame = read_frame(cam)
         if frame is None:
             continue
 
         direction, frame = detect_direction(frame)
-        if direction:
-            print(direction)
 
-        if USE_ORDINATEUR_CAMERA:
-            cv2.imshow("Arrow Detection", frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+        # lisse la detection: il faut le meme resultat plusieurs fois de suite
+        history.append(direction)
+        if len(history) > 5:
+            history.pop(0)
+        stable = direction if history.count(direction) >= 4 else None
+
+        if stable:
+            print(stable)
+
+        cv2.imshow("Arrow Detection", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    if USE_ORDINATEUR_CAMERA:
+        cam.release()
+    else:
+        cam.stop()
+    cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     main()
