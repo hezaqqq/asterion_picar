@@ -28,7 +28,7 @@ ARROW_REF = np.array([
 
 
 def detect_direction(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COL  OR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
     _, thresh = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
@@ -90,16 +90,13 @@ def main():
             continue
 
         direction, frame = detect_direction(frame)
+        if direction:
+            print(direction)
 
-        cv2.imshow("Arrow Detection", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    if USE_ORDINATEUR_CAMERA:
-        cam.release()
-    else:
-        cam.stop()
-    cv2.destroyAllWindows()
+        if USE_ORDINATEUR_CAMERA:
+            cv2.imshow("Arrow Detection", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
 if __name__ == "__main__":
     main()
