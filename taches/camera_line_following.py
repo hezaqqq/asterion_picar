@@ -132,3 +132,6 @@ def main():
         time.sleep(0.2)
         servos.release()
         cam.stop()
+
+if __name__ == "__main__":
+    main()
