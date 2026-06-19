@@ -85,37 +85,50 @@ def detect_direction(frame):
 
     h, w = frame.shape[:2]
     best = None
-    best_score = 0.6  # tres permissif
+    best_ratio = 2.5  # plus haut = plus strict sur la forme "pointue d'un cote"
 
     for c in cnts:
         area = cv2.contourArea(c)
-        if area < 0.001 * w * h:
+        if area < 0.01 * w * h:
             continue
 
-        score = cv2.matchShapes(c, ARROW_REF, cv2.CONTOURS_MATCH_I1, 0)
-        if score < best_score:
-            best_score = score
-            best = c
+        x, y, rw, rh = cv2.boundingRect(c)
+        if rw < 10 or rh < 10:
+            continue
+
+        mask = np.zeros((rh, rw), dtype=np.uint8)
+        cv2.drawContours(mask, [c], -1, 255, -1, offset=(-x, -y))
+
+        col_sums = mask.sum(axis=0) / 255.0  # hauteur de matiere par colonne
+
+        edge = max(3, rw // 8)
+        left_avg = col_sums[:edge].mean()
+        right_avg = col_sums[-edge:].mean()
+
+        small = min(left_avg, right_avg)
+        big = max(left_avg, right_avg)
+        ratio = big / (small + 1e-5)
+
+        if ratio > best_ratio:
+            best_ratio = ratio
+            best = (c, left_avg, right_avg, x, y, rw, rh)
 
     if best is None:
         return None, frame
 
-    c = best
+    c, left_avg, right_avg, x, y, rw, rh = best
+
+    # le cote le plus fin est la pointe de la fleche
+    direction = "droite" if right_avg < left_avg else "gauche"
+
     M = cv2.moments(c)
     if M["m00"] == 0:
         return None, frame
     cx = int(M["m10"] / M["m00"])
     cy = int(M["m01"] / M["m00"])
 
-    pts = c.reshape(-1, 2)
-    dists = np.linalg.norm(pts - [cx, cy], axis=1)
-    tip = pts[np.argmax(dists)]
-
-    direction = "droite" if tip[0] > cx else "gauche"
-
     cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
     cv2.circle(frame, (cx, cy), 4, (255, 0, 0), -1)
-    cv2.circle(frame, tuple(tip), 6, (0, 0, 255), -1)
     cv2.putText(frame, direction, (cx - 30, cy - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
     return direction, frame
