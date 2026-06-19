@@ -6,9 +6,9 @@ import servo_controller as servo
 import time
 
 ANGLE_CENTER_ROUE    = 100
-ANGLE_CENTER_TETE_GD = 108
+ANGLE_CENTER_TETE_GD = 90
 ANGLE_MIN_TETE_GD    = 18
-ANGLE_MAX_TETE_GD    = 198
+ANGLE_MAX_TETE_GD    = 162
 
 class detection:
 

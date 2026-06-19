@@ -10,8 +10,8 @@ class StayInZone:
     ANGLE_MIN_ROUE    = 60
     ANGLE_MAX_ROUE    = 140
 
-    ANGLE_CENTER_TETE_GD = 108
-    ANGLE_MIN_TETE_GD    = 54
+    ANGLE_CENTER_TETE_GD = 90
+    ANGLE_MIN_TETE_GD    = 18
     ANGLE_MAX_TETE_GD    = 162
 
     SPEED_STRAIGHT = 0.2
@@ -31,7 +31,7 @@ class StayInZone:
         self._last_side = self.ANGLE_MAX_ROUE
 
         self._gauche        = True
-        self._angle_tete_gd = self.ANGLE_CENTER_ROUE
+        self._angle_tete_gd = self.ANGLE_CENTER_TETE_GD
 
     # ── Ligne ──────────────────────────────────────────────────────────
     def _reverse(self, steer_angle: float):
@@ -90,21 +90,21 @@ class StayInZone:
         if not self.robot.moving:
             self.robot.start()
 
-        if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD + 36:
+        if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant
             self.servos.set_angle(0, 140)
             time.sleep(3)
             self.servos.set_angle(0, 60)
             time.sleep(3)
 
-        elif self.ANGLE_MAX_TETE_GD - 36 <= self._angle_tete_gd <= self.ANGLE_MAX_TETE_GD:
+        elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
             self.servos.set_angle(0, 60)
             time.sleep(3)
             self.servos.set_angle(0, 140)
             time.sleep(3)
 
-        elif self.ANGLE_MIN_TETE_GD + 36 < self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
+        elif self._angle_tete_gd == 54:
             # Centre-gauche → recul, roues à gauche, puis avance
             self.robot.stop()
             self.servos.set_angle(0, self.ANGLE_MIN_ROUE)
@@ -147,7 +147,7 @@ class StayInZone:
     # ── Boucle principale ────────────────────────────────────────────
     def run(self):
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
-        self.servos.set_angle(1, self.ANGLE_MAX_TETE_GD)
+        self.servos.set_angle(1, 54)
         self.servos.set_angle(2, 75)
         self.robot.SPEED = self.SPEED_STRAIGHT
         self.robot.start()
@@ -176,7 +176,7 @@ class StayInZone:
         finally:
             self.robot.stop()
             self.robot.hazard_off()
-            self.servos.set_angle(1, self.ANGLE_CENTER_TETE_GD)
+            self.servos.set_angle(1, 90)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
 
 
