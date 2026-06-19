@@ -72,11 +72,11 @@ class StayInZone:
     # ── Tête + obstacle ───────────────────────────────────────────────
     def _sweep_head(self):
         if self._gauche:
-            self._angle_tete_gd += 10
+            self._angle_tete_gd += 15
             if self._angle_tete_gd >= self.ANGLE_MAX_TETE_GD:
                 self._gauche = False
         else:
-            self._angle_tete_gd -= 10
+            self._angle_tete_gd -= 15
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
