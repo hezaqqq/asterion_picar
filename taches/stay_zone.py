@@ -31,7 +31,7 @@ class StayInZone:
         self._last_side = self.ANGLE_MAX_ROUE
 
         self._gauche        = True
-        self._angle_tete_gd = 90
+        self._angle_tete_gd = 108
 
     # ── Ligne ──────────────────────────────────────────────────────────
     def _reverse(self, steer_angle: float):
@@ -147,7 +147,7 @@ class StayInZone:
     # ── Boucle principale ────────────────────────────────────────────
     def run(self):
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
-        self.servos.set_angle(1, 90)
+        self.servos.set_angle(1, 108)
         self.servos.set_angle(2, 75)
         self.robot.SPEED = self.SPEED_STRAIGHT
         self.robot.start()
