@@ -104,9 +104,10 @@ def main():
         if stable:
             print(stable)
 
-        cv2.imshow("Arrow Detection", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        if USE_ORDINATEUR_CAMERA:
+            cv2.imshow("Arrow Detection", frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     if USE_ORDINATEUR_CAMERA:
         cam.release()
