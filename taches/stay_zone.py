@@ -11,8 +11,8 @@ class StayInZone:
     ANGLE_MAX_ROUE    = 140
 
     ANGLE_CENTER_TETE_GD = 108
-    ANGLE_MIN_TETE_GD    = 18
-    ANGLE_MAX_TETE_GD    = 198
+    ANGLE_MIN_TETE_GD    = 36
+    ANGLE_MAX_TETE_GD    = 180
 
     SPEED_STRAIGHT = 0.2
     SPEED_CURVE    = 0.2
