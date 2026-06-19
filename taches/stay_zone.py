@@ -11,8 +11,8 @@ class StayInZone:
     ANGLE_MAX_ROUE    = 140
 
     ANGLE_CENTER_TETE_GD = 108
-    ANGLE_MIN_TETE_GD    = 48
-    ANGLE_MAX_TETE_GD    = 168
+    ANGLE_MIN_TETE_GD    = 18
+    ANGLE_MAX_TETE_GD    = 198
 
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.20
@@ -73,11 +73,11 @@ class StayInZone:
     # ── Tête + obstacle ───────────────────────────────────────────────
     def _sweep_head(self):
         if self._gauche:
-            self._angle_tete_gd += 1
+            self._angle_tete_gd += 10
             if self._angle_tete_gd >= self.ANGLE_MAX_TETE_GD:
                 self._gauche = False
         else:
-            self._angle_tete_gd -= 1
+            self._angle_tete_gd -= 10
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
