@@ -13,7 +13,7 @@ from robot_controller import RobotController
 HEAD_CHANNEL     = 2
 STEERING_CHANNEL = 0 
 HEAD_DOWN_ANGLE  = 130
-STEERING_CENTER  = 90
+ANGLE_CENTER_TETE_GD = 108
 
 latest_frame = None
 lock = threading.Lock()
@@ -111,10 +111,10 @@ def main():
             offset, frame = find_line_offset(frame)
 
             if offset is not None:
-                angle = STEERING_CENTER + offset * 40
+                angle = ANGLE_CENTER_TETE_GD + offset * 40
                 servos.set_angle(STEERING_CHANNEL, angle)
             else:
-                servos.set_angle(STEERING_CHANNEL, STEERING_CENTER)
+                servos.set_angle(STEERING_CHANNEL, ANGLE_CENTER_TETE_GD)
 
             with lock:
                 latest_frame = frame
@@ -126,7 +126,7 @@ def main():
 
     finally:
         robot.release()
-        servos.set_angle(STEERING_CHANNEL, STEERING_CENTER)
+        servos.set_angle(STEERING_CHANNEL, ANGLE_CENTER_TETE_GD)
         servos.release()
         cam.stop()
 
