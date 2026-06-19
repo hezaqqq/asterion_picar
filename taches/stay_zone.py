@@ -11,13 +11,13 @@ class StayInZone:
     ANGLE_MAX_ROUE    = 140
 
     ANGLE_CENTER_TETE_GD = 108
-    ANGLE_MIN_TETE_GD    = 36
-    ANGLE_MAX_TETE_GD    = 180
+    ANGLE_MIN_TETE_GD    = 54
+    ANGLE_MAX_TETE_GD    = 162
 
     SPEED_STRAIGHT = 0.2
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 2
+    REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 250
@@ -72,11 +72,11 @@ class StayInZone:
     # ── Tête + obstacle ───────────────────────────────────────────────
     def _sweep_head(self):
         if self._gauche:
-            self._angle_tete_gd += 15
+            self._angle_tete_gd += 36
             if self._angle_tete_gd >= self.ANGLE_MAX_TETE_GD:
                 self._gauche = False
         else:
-            self._angle_tete_gd -= 15
+            self._angle_tete_gd -= 36
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
@@ -118,7 +118,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
-            time.sleep(3)
+            time.sleep(2)
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
@@ -135,7 +135,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
-            time.sleep(3)
+            time.sleep(2)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
