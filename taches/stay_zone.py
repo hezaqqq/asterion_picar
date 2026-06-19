@@ -89,16 +89,51 @@ class StayInZone:
         if not self.robot.moving:
             self.robot.start()
 
-        if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
+        if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD + 36:
+            # Gauche extrême → contourne par la droite, en avançant
             self.servos.set_angle(0, 140)
             time.sleep(3)
             self.servos.set_angle(0, 60)
             time.sleep(3)
+
+        elif self.ANGLE_MAX_TETE_GD - 36 <= self._angle_tete_gd <= self.ANGLE_MAX_TETE_GD:
+            # Droite extrême → contourne par la gauche, en avançant
+            self.servos.set_angle(0, 60)
+            time.sleep(3)
+            self.servos.set_angle(0, 140)
+            time.sleep(3)
+
+        elif self.ANGLE_MIN_TETE_GD + 36 < self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
+            # Centre-gauche → recul, roues à gauche, puis avance
+            self.robot.stop()
+            self.servos.set_angle(0, self.ANGLE_MIN_ROUE)
+            time.sleep(0.1)
+
+            self.robot.SPEED = self.SPEED_CURVE
+            self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=self.RAMP_TIME)
+            time.sleep(self.REVERSE_TIME)
+
+            self.robot.stop()
+            time.sleep(0.1)
+            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
+            self.robot.SPEED = self.SPEED_STRAIGHT
+            self.robot.start()
+
         else:
-            self.servos.set_angle(0, 60)
-            time.sleep(3)
-            self.servos.set_angle(0, 140)
-            time.sleep(3)
+            # Centre-droite → recul, roues à droite, puis avance
+            self.robot.stop()
+            self.servos.set_angle(0, self.ANGLE_MAX_ROUE)
+            time.sleep(0.1)
+
+            self.robot.SPEED = self.SPEED_CURVE
+            self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=self.RAMP_TIME)
+            time.sleep(self.REVERSE_TIME)
+
+            self.robot.stop()
+            time.sleep(0.1)
+            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
+            self.robot.SPEED = self.SPEED_STRAIGHT
+            self.robot.start()
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
