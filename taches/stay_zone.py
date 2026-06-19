@@ -90,14 +90,14 @@ class StayInZone:
             self.robot.start()
 
         if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
-            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
+            self.servos.set_angle(0, 140)
             time.sleep(3)
-            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
+            self.servos.set_angle(0, 60)
             time.sleep(3)
         else:
-            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
+            self.servos.set_angle(0, 60)
             time.sleep(3)
-            self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
+            self.servos.set_angle(0, 140)
             time.sleep(3)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
