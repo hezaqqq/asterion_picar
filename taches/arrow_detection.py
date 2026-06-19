@@ -28,7 +28,7 @@ ARROW_REF = np.array([
 
 
 def detect_direction(frame):
-    gray = cv2.cvtColor(frame, cv2.COL  OR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
     _, thresh = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
