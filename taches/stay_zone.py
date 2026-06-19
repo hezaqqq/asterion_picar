@@ -118,6 +118,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
+            time.sleep(3)
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
@@ -134,6 +135,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
+            time.sleep(3)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
