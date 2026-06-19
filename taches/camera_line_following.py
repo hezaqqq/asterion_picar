@@ -10,10 +10,15 @@ from flask import Flask, Response
 from servo_controller import ServoController
 from robot_controller import RobotController
 
-HEAD_CHANNEL     = 2
-STEERING_CHANNEL = 0 
-HEAD_DOWN_ANGLE  = 130
-ANGLE_CENTER_TETE_GD = 108
+HEAD_TILT_CHANNEL = 2   # tete haut/bas
+HEAD_PAN_CHANNEL  = 1   # tete gauche/droite
+WHEEL_CHANNEL     = 0   # direction des roues
+
+HEAD_TILT_ANGLE   = 130  # le plus bas autorise pour ce servo (limite SAFE_ANGLES)
+HEAD_PAN_CENTER   = 100  # a tester/ajuster pour que la tete soit bien droite
+WHEEL_CENTER      = 100  # a tester/ajuster pour que les roues soient bien droites
+
+STEERING_GAIN     = 25   # sensibilite du virage, augmente si le robot tourne pas assez
 
 latest_frame = None
 lock = threading.Lock()
@@ -41,15 +46,15 @@ def find_line_offset(frame):
 
     cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not cnts:
-        return None, None
+        return None, frame
 
     c = max(cnts, key=cv2.contourArea)
     if cv2.contourArea(c) < 500:
-        return None, None
+        return None, frame
 
     M = cv2.moments(c)
     if M["m00"] == 0:
-        return None, None
+        return None, frame
 
     cx = int(M["m10"] / M["m00"])
     cy = int(M["m01"] / M["m00"])
@@ -94,9 +99,10 @@ def main():
     servos = ServoController()
     robot = RobotController()
 
-    servos.set_angle(HEAD_CHANNEL, HEAD_DOWN_ANGLE)
-    servos.set_angle(STEERING_CHANNEL, ANGLE_CENTER_TETE_GD)
-    time.sleep(0.5)
+    servos.set_angle(HEAD_TILT_CHANNEL, HEAD_TILT_ANGLE)
+    servos.set_angle(HEAD_PAN_CHANNEL, HEAD_PAN_CENTER)
+    servos.set_angle(WHEEL_CHANNEL, WHEEL_CENTER)
+    time.sleep(1.0)
 
     cam = get_camera()
     robot.start()
@@ -112,11 +118,11 @@ def main():
             offset, frame = find_line_offset(frame)
 
             if offset is not None:
-                angle = ANGLE_CENTER_TETE_GD + offset * 20
+                angle = WHEEL_CENTER + offset * STEERING_GAIN
                 angle = max(60, min(140, angle))
-                servos.set_angle(STEERING_CHANNEL, angle)
+                servos.set_angle(WHEEL_CHANNEL, angle)
             else:
-                servos.set_angle(STEERING_CHANNEL, ANGLE_CENTER_TETE_GD)
+                servos.set_angle(WHEEL_CHANNEL, WHEEL_CENTER)
 
             with lock:
                 latest_frame = frame
@@ -128,10 +134,12 @@ def main():
 
     finally:
         robot.release()
-        servos.set_angle(STEERING_CHANNEL, ANGLE_CENTER_TETE_GD)
+        servos.set_angle(WHEEL_CHANNEL, WHEEL_CENTER)
+        servos.set_angle(HEAD_PAN_CHANNEL, HEAD_PAN_CENTER)
         time.sleep(0.2)
         servos.release()
         cam.stop()
+
 
 if __name__ == "__main__":
     main()
