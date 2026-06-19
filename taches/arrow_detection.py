@@ -47,16 +47,11 @@ def detect_direction(frame):
 
     h, w = frame.shape[:2]
     best = None
-    best_score = 0.35  # plus haut = plus permissif
+    best_score = 0.6  # tres permissif
 
     for c in cnts:
         area = cv2.contourArea(c)
-        if area < 0.002 * w * h:
-            continue
-
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        if len(approx) < 5 or len(approx) > 10:
+        if area < 0.001 * w * h:
             continue
 
         score = cv2.matchShapes(c, ARROW_REF, cv2.CONTOURS_MATCH_I1, 0)
@@ -88,7 +83,6 @@ def detect_direction(frame):
     return direction, frame
 
 
-# --------- serveur web pour voir la camera depuis le Mac ---------
 app = Flask(__name__)
 
 def gen_stream():
@@ -111,7 +105,6 @@ def stream():
 
 def run_server():
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
-# -------------------------------------------------------------------
 
 
 def main():
