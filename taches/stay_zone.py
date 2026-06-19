@@ -83,11 +83,10 @@ class StayInZone:
         self.servos.set_angle(1, self._angle_tete_gd)
 
     def _check_obstacle(self) -> bool:
-        """Retourne True si une manœuvre d'évitement a été déclenchée."""
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
             return False
 
-        # On arrête l'avancée pendant la manœuvre de scan
+        self.robot._watch_enabled = False   # ← suspend la surveillance auto
         self.robot.stop()
 
         if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
@@ -102,7 +101,9 @@ class StayInZone:
             time.sleep(3)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
+        self.robot.hazard_off()
         self.robot.SPEED = self.SPEED_STRAIGHT
+        self.robot._watch_enabled = True    # ← réactive la surveillance
         self.robot.start()
         return True
 
