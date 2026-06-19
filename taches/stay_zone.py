@@ -86,25 +86,28 @@ class StayInZone:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
             return False
 
-        self.robot._watch_enabled = False   # ← suspend la surveillance auto
-        self.robot.stop()
+        self.robot._watch_enabled = False   # suspend la surveillance auto
+
+        # On reste/redémarre en mouvement AVANT de braquer
+        self.robot.SPEED = self.SPEED_CURVE
+        if not self.robot.moving:
+            self.robot.start()
 
         if self.ANGLE_MIN_TETE_GD <= self._angle_tete_gd <= self.ANGLE_CENTER_TETE_GD:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
-            time.sleep(3)
+            time.sleep(1.5)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
-            time.sleep(3)
+            time.sleep(1.5)
         else:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE - 30)
-            time.sleep(3)
+            time.sleep(1.5)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE + 30)
-            time.sleep(3)
+            time.sleep(1.5)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.hazard_off()
         self.robot.SPEED = self.SPEED_STRAIGHT
-        self.robot._watch_enabled = True    # ← réactive la surveillance
-        self.robot.start()
+        self.robot._watch_enabled = True
         return True
 
     # ── Boucle principale ────────────────────────────────────────────
