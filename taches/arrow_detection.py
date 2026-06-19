@@ -32,7 +32,6 @@ def detect_direction(frame):
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
     _, thresh = cv2.threshold(blur, 60, 255, cv2.THRESH_BINARY_INV)
-    cv2.imshow("Seuil", thresh)
 
     cnts, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     if not cnts:
