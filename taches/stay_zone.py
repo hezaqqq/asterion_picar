@@ -20,7 +20,7 @@ class StayInZone:
     REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 225
+    OBSTACLE_DIST_MM = 25
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
