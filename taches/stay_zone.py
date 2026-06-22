@@ -17,7 +17,7 @@ class StayInZone:
     SPEED_STRAIGHT = 0.2
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 2.25
+    REVERSE_TIME   = 2
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 200
@@ -119,7 +119,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
-            time.sleep(2)
+            time.sleep(1.25)
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
@@ -136,7 +136,7 @@ class StayInZone:
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             self.robot.SPEED = self.SPEED_STRAIGHT
             self.robot.start()
-            time.sleep(2)
+            time.sleep(1.25)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
