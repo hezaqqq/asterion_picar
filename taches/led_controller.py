@@ -40,6 +40,6 @@ if __name__ == "__main__":
     controller.setup()
     while True:
         controller.led_on(6)
-        controller.led_on(7)
+        controller.led_on(5)
         controller.led_on(9)
         controller.led_on(8)
