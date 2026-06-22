@@ -31,7 +31,7 @@ class StayInZone:
         self._last_side = self.ANGLE_MAX_ROUE
 
         self._gauche        = True
-        self._angle_tete_gd = self.ANGLE_CENTER_TETE_GD
+        self._angle_tete_gd = 54
 
     # ── Ligne ──────────────────────────────────────────────────────────
     def _reverse(self, steer_angle: float):
