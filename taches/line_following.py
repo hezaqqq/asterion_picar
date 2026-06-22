@@ -106,7 +106,7 @@ class LineFollowingController:
 
             elif r == 0 and m == 0 and l == 0:
                 if hole_start is None:
-                    hole_start     = time.time()
+                    block_start    = time.time()
                     angle_pre_hole = current_angle
 
                 elapsed = time.time() - hole_start

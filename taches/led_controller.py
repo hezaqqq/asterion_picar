@@ -1,4 +1,5 @@
 from gpiozero import LED
+from gpiozero.exc import GPIOPinInUse
 
 class RobotLEDController:
 
@@ -14,17 +15,18 @@ class RobotLEDController:
 
     def setup(self):
         for led_id, cfg in self.LED_CONFIG.items():
-            self.leds[led_id] = LED(cfg["gpio"], active_high=cfg["active_high"], initial_value=False)
+            try:
+                self.leds[led_id] = LED(cfg["gpio"], active_high=cfg["active_high"], initial_value=False)
+            except GPIOPinInUse:
+                pass
 
     def led_on(self, led_id: int):
-        if led_id not in self.leds:
-            raise ValueError(f"LED {led_id} inexistante.")
-        self.leds[led_id].on()
+        if led_id in self.leds:
+            self.leds[led_id].on()
 
     def led_off(self, led_id: int):
-        if led_id not in self.leds:
-            raise ValueError(f"LED {led_id} inexistante.")
-        self.leds[led_id].off()
+        if led_id in self.leds:
+            self.leds[led_id].off()
 
     def all_off(self):
         for led_id in self.leds:
