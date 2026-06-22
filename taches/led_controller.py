@@ -34,7 +34,3 @@ class RobotLEDController:
     def all_off(self):
         for led_id in self.leds:
             self.leds[led_id].off()
-
-if __name__ == "__main__":
-    RobotLEDController().led_on(5)
-    
