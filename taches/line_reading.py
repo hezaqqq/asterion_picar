@@ -18,7 +18,7 @@ class LineFollowingController:
 
     def __init__(self):
         self.robot    = robot.RobotController()
-        self.line     = line_reading.LineReading()
+        self.line     = line_reading.LineFollowingController()
         self.servos   = servo.ServoController()
         self._running = False
 
