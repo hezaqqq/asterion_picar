@@ -80,7 +80,7 @@ class StayInZone:
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
-        time.sleep(0.3)
+        time.sleep(0.15)
 
     def _check_obstacle(self) -> bool:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
@@ -93,16 +93,16 @@ class StayInZone:
         if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant
             self.servos.set_angle(0, 140)
-            time.sleep(3)
+            time.sleep(2)
             self.servos.set_angle(0, 60)
-            time.sleep(3)
+            time.sleep(2)
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
             self.servos.set_angle(0, 60)
-            time.sleep(3)
+            time.sleep(2)
             self.servos.set_angle(0, 140)
-            time.sleep(3)
+            time.sleep(2)
 
         elif self._angle_tete_gd == 54:
             # Centre-gauche → recul, roues à gauche, puis avance
