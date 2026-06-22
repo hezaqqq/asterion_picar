@@ -36,5 +36,7 @@ class RobotLEDController:
             self.leds[led_id].off()
 
 if __name__ == "__main__":
-    RobotLEDController().led_on(15)
-    
+    controller = RobotLEDController()
+    controller.setup()
+    controller.led_on(1)
+    controller.led_on(2)
