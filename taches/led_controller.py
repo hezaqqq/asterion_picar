@@ -38,5 +38,6 @@ class RobotLEDController:
 if __name__ == "__main__":
     controller = RobotLEDController()
     controller.setup()
-    controller.led_on(7)
-    controller.led_on(8)
+    while True:
+        controller.led_on(5)
+        controller.led_on(8)
