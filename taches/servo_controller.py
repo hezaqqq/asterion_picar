@@ -8,7 +8,7 @@ from adafruit_pca9685 import PCA9685
 class ServoController:
     SAFE_ANGLES = {
         0: (60, 140),
-        1: (70, 130),
+        1: (0, 180),
         2: (70, 130),
         7: (0,  185),
     }
