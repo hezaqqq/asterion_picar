@@ -11,7 +11,7 @@ print("Largeur (axe X) :", width)
 print("Hauteur (axe Y) :", height)
 
 image_resized = cv2.resize(image, (800, 600))
-cv2.imwrite("Images/image1_resized.png", image_resized)
+cv2.imwrite("image1_resized.png", image_resized)
 
 cv2.imshow("Image redimensionnee", image_resized)
 cv2.waitKey(0)
