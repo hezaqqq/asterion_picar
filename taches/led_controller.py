@@ -39,4 +39,4 @@ if __name__ == "__main__":
     controller = RobotLEDController()
     controller.setup()
     controller.led_on(5)
-    controller.led_on(9)
+    controller.led_on(8)
