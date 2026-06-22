@@ -11,7 +11,7 @@ class LineFollowingController:
     ANGLE_CENTER   = 100
     ANGLE_MIN      = 60
     ANGLE_MAX      = 140
-    HOLE_TIMEOUT   = 1   # durée max d'un trou blanc à ignorer (s)
+    HOLE_TIMEOUT   = 1   
 
     SPEED_STRAIGHT = 0.35
     SPEED_CURVE    = 0.30
@@ -26,29 +26,23 @@ class LineFollowingController:
         self._running = False
 
     def _set_leds_state(self, state: str):
-        # Éteindre toutes les LEDs d'abord
         self.leds.all_off()
         
         if state == "left":
-            # Tourne à gauche LEDs 5 et 6
             self.leds.led_on(5)
             self.leds.led_on(6)
         elif state == "right":
-            # Tourne à droite LEDs 7 et 8
             self.leds.led_on(7)
             self.leds.led_on(8)
         elif state == "straight":
-            # Tout droit LEDs 5, 6, 7, 8
             self.leds.led_on(5)
             self.leds.led_on(6)
             self.leds.led_on(7)
             self.leds.led_on(8)
         elif state == "hole_timeout":
-            # Dans HOLE_TIMEOUT LEDs 6 et 7
             self.leds.led_on(6)
             self.leds.led_on(7)
         elif state == "lost":
-            # Ligne perdue LEDs 5 et 8
             self.leds.led_on(5)
             self.leds.led_on(8)
 
@@ -69,48 +63,48 @@ class LineFollowingController:
         while self._running:
             l, m, r = self.line.line_read()
 
-            if r == 0 and m == 1 and l == 0: # ligne
+            if r == 0 and m == 1 and l == 0:
                 current_angle    = self.ANGLE_CENTER
                 self.robot.SPEED = self.SPEED_STRAIGHT
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("straight")
 
-            elif r == 1 and m == 0 and l == 0: # ligne à droite → virer à droite
+            elif r == 1 and m == 0 and l == 0:
                 current_angle   += 13
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("right")
 
-            elif r == 0 and m == 0 and l == 1: # ligne à gauche
+            elif r == 0 and m == 0 and l == 1:
                 current_angle   -= 13
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("left")
 
-            elif r == 1 and m == 1 and l == 0: # légèrement à droite
+            elif r == 1 and m == 1 and l == 0:
                 current_angle   += 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("right")
 
-            elif r == 0 and m == 1 and l == 1: # légèrement à gauche
+            elif r == 0 and m == 1 and l == 1:
                 current_angle   -= 5
                 self.robot.SPEED = self.SPEED_SLIGHT
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("left")
 
-            elif r == 1 and m == 1 and l == 1: #tout droit
+            elif r == 1 and m == 1 and l == 1:
                 current_angle    = self.ANGLE_CENTER
                 hole_start       = None
                 in_hole_timeout  = False
                 self._set_leds_state("straight")
 
-            elif r == 0 and m == 0 and l == 0: #trou 
+            elif r == 0 and m == 0 and l == 0:
                 if hole_start is None:
                     hole_start     = time.time()
                     angle_pre_hole = current_angle
@@ -118,13 +112,10 @@ class LineFollowingController:
                 elapsed = time.time() - hole_start
 
                 if elapsed <= self.HOLE_TIMEOUT:
-                    # Trou blanc LEDs 6 et 7
                     in_hole_timeout = True
                     self._set_leds_state("hole_timeout")
-                    # On continue sans rien changer
 
                 else:
-                    # Ligne vraiment perdue LEDs 5 et 8
                     in_hole_timeout = False
                     self._set_leds_state("lost")
                     
@@ -139,7 +130,6 @@ class LineFollowingController:
                             ramp_time=elapsed + 0.5,
                         )
 
-                    # Reset et reprise
                     hole_start    = None
                     current_angle = angle_pre_hole
                     self.servos.set_angle(0, current_angle)

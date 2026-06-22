@@ -3,7 +3,6 @@ from gpiozero import LED
 class RobotLEDController:
 
     LED_CONFIG = {
-        1: {"gpio": 9,  "active_high": True},
         2: {"gpio": 25, "active_high": True},
         3: {"gpio": 11, "active_high": True},
         4: {"gpio": 0,  "active_high": False},
