@@ -7,12 +7,7 @@ time.sleep(1)
 print("Demandé: 90")
 input("Vérifie visuellement la position, puis Entrée...")
 
-s.set_angle(1, 54)
+s.set_angle(1, 18)
 time.sleep(1)
 print("Demandé: 54")
 input("Vérifie visuellement, puis Entrée...")
-
-s.set_angle(1, 30)
-time.sleep(1)
-print("Demandé: 18")
-input("Vérifie visuellement — est-ce que ça force/bute ?")
