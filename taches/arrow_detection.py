@@ -99,7 +99,7 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    REVERSE_TIME   = 1.535
+    REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 450
