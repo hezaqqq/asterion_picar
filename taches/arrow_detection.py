@@ -26,33 +26,46 @@ def read_frame(cam):
     return None
 
 
+def get_wall_angle(frame):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(blur, 50, 150)
+    lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=50, minLineLength=50, maxLineGap=10)
+    
+    angles = []
+    if lines is not None:
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            angle = np.degrees(np.arctan2(y2 - y1, x2 - x1))
+            if 45 < abs(angle) < 135:
+                angles.append(angle)
+                cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                
+    if len(angles) > 0:
+        return np.mean(angles), frame
+    return None, frame
+
+
 def detect_direction(frame):
     frame_gris = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     frame_blur = cv2.GaussianBlur(frame_gris, (5, 5), 0)
-
-    # trouve les sommets
     sommets = cv2.goodFeaturesToTrack(frame_blur, 10, qualityLevel=0.1, minDistance=10)
     direction = None
 
     if sommets is not None:
         coords = np.int32(sommets).reshape(-1, 2)
-
-        # dessine les coins
         for (x, y) in coords:
             cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
 
-        #ligne milieu
         x_max = coords[:, 0].max()
         x_min = coords[:, 0].min()
         x_moy = int((x_max + x_min) / 2)
         
         cv2.line(frame, (x_moy, 0), (x_moy, frame.shape[0]), (0, 0, 255), 2)
 
-        # Compte les coins
         nb_g = np.sum(coords[:, 0] < x_moy)
         nb_d = np.sum(coords[:, 0] > x_moy)
         
-        # Determine direction
         if nb_g > nb_d:
             direction = "gauche"
         elif nb_d > nb_g:
@@ -60,7 +73,6 @@ def detect_direction(frame):
         else:
             direction = "centre"
 
-        # dessine sur la camera
         cv2.putText(frame, f"G: {nb_g} | D: {nb_d} ({direction})", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
 
@@ -68,22 +80,25 @@ def detect_direction(frame):
 
 
 app = Flask(__name__)
+
 def gen_stream():
     global latest_frame
     while True:
         with lock:
             if latest_frame is None:
                 continue
-            # Encode the processed frame containing lines, circles, and text
             ok, jpg = cv2.imencode('.jpg', latest_frame)
         if ok:
             yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + jpg.tobytes() + b'\r\n')
+
 @app.route('/')
 def index():
     return '<img src="/stream">'
+
 @app.route('/stream')
 def stream():
     return Response(gen_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 def run_server():
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
 
@@ -98,9 +113,7 @@ def main():
     ANGLE_MAX_ROUE    = 140
 
     SPEED_STRAIGHT = 0.225
-
     REVERSE_TIME   = 1.535
-    RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 345
 
@@ -108,7 +121,6 @@ def main():
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
     servos    = ServoController()
 
-    # lance le serveur
     threading.Thread(target=run_server, daemon=True).start()
 
     try:
@@ -117,6 +129,7 @@ def main():
         servos.set_angle(1, 87)
         servos.set_angle(0, ANGLE_CENTER_ROUE)
         robot.start()
+        
         while True:
             frame = read_frame(cam)
             if frame is None:
@@ -128,17 +141,29 @@ def main():
                 history.append(direction)
                 if len(history) > 5:
                     history.pop(0)
+                    
                 if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
 
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(4.75)
+                        time.sleep(1.2)
+                        
+                        start_turn = time.time()
+                        while time.time() - start_turn < 3.5:
+                            f = read_frame(cam)
+                            if f is not None:
+                                angle, frame = get_wall_angle(f)
+                                if angle is not None and (84 <= abs(angle) <= 96):
+                                    break
+                            time.sleep(0.05)
+
+                        servos.set_angle(0, ANGLE_CENTER_ROUE)
                         robot.stop()
-                        time.sleep(1)
+                        time.sleep(0.5)
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         robot.start(-SPEED_STRAIGHT)
                         time.sleep(REVERSE_TIME)
-                        time.sleep(1)
+                        time.sleep(0.5)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         time.sleep(0.5)
                         robot.stop()
@@ -146,31 +171,38 @@ def main():
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(4.75)
+                        time.sleep(1.2)
+                        
+                        start_turn = time.time()
+                        while time.time() - start_turn < 3.5:
+                            f = read_frame(cam)
+                            if f is not None:
+                                angle, frame = get_wall_angle(f)
+                                if angle is not None and (84 <= abs(angle) <= 96):
+                                    break
+                            time.sleep(0.05)
+
+                        servos.set_angle(0, ANGLE_CENTER_ROUE)
                         robot.stop()
-                        time.sleep(1)
+                        time.sleep(0.5)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         robot.start(-SPEED_STRAIGHT)
                         time.sleep(REVERSE_TIME)
-                        time.sleep(1)
+                        time.sleep(0.5)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         time.sleep(0.5)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
-                        
-
 
                     else:
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         robot.SPEED = SPEED_STRAIGHT
-                    
-                    
 
             with lock:
                 latest_frame = frame.copy()
 
     except KeyboardInterrupt:
-            pass
+        pass
     finally:
         robot.stop()
         robot.hazard_off()
