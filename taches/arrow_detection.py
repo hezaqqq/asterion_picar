@@ -97,8 +97,7 @@ def main():
     ANGLE_MIN_ROUE    = 60
     ANGLE_MAX_ROUE    = 140
 
-    SPEED_STRAIGHT = 0.2
-    SPEED_CURVE    = 0.15
+    SPEED_STRAIGHT = 0.225
 
     REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
@@ -137,7 +136,7 @@ def main():
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MAX_ROUE)
-                        robot.start(-SPEED_CURVE)
+                        robot.start(-SPEED_STRAIGHT)
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
@@ -151,7 +150,7 @@ def main():
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        robot.start(-SPEED_CURVE)
+                        robot.start(-SPEED_STRAIGHT)
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
