@@ -103,7 +103,7 @@ def main():
     REVERSE_TIME   = 2.5
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 450
+    OBSTACLE_DIST_MM = 400
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
@@ -140,8 +140,9 @@ def main():
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         robot.motors.drive(
                             -SPEED_CURVE,
-                            ramp_time=20
+                            ramp_time=0.5
                         )
+                        time.sleep(REVERSE_TIME)
                         robot.stop()
                         time.sleep(0.1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
@@ -157,8 +158,9 @@ def main():
                         robot.start()
                         robot.motors.drive(
                             -SPEED_CURVE,
-                            ramp_time=REVERSE_TIME
+                            ramp_time=0.5
                         )
+                        time.sleep(REVERSE_TIME)
                         robot.stop()
                         time.sleep(0.1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
