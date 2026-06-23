@@ -100,7 +100,7 @@ def main():
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 2.15
+    REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 400
@@ -130,6 +130,7 @@ def main():
                 if len(history) > 5:
                     history.pop(0)
                 if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
+
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         robot.SPEED = SPEED_CURVE
@@ -141,7 +142,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.75)
+                        time.sleep(0.6)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
 
@@ -156,7 +157,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.75)
+                        time.sleep(0.6)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
                         
