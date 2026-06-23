@@ -100,7 +100,7 @@ def main():
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 2.25
+    REVERSE_TIME   = 1.5
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 350
@@ -133,16 +133,27 @@ def main():
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         robot.SPEED = SPEED_CURVE
+                        time.sleep(2)
+                        servos.set_angle(0, ANGLE_MAX_ROUE)
+                        robot.motors.drive(
+                            -SPEED_CURVE,
+                            ramp_time=REVERSE_TIME
+                        )
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         robot.SPEED = SPEED_CURVE
+                        time.sleep(2)
+                        servos.set_angle(0, ANGLE_MIN_ROUE)
+                        robot.motors.drive(
+                            -SPEED_CURVE,
+                            ramp_time=REVERSE_TIME
+                        )
 
                     else:
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         robot.SPEED = SPEED_STRAIGHT
                     
-                    time.sleep(2)
                     
 
             with lock:
