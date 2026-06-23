@@ -97,8 +97,8 @@ def main():
     ANGLE_MIN_ROUE    = 60
     ANGLE_MAX_ROUE    = 140
 
-    SPEED_STRAIGHT = 0.25
-    SPEED_CURVE    = 0.1
+    SPEED_STRAIGHT = 0.2
+    SPEED_CURVE    = 0.15
 
     REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
@@ -133,7 +133,6 @@ def main():
 
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        robot.SPEED = SPEED_CURVE
                         time.sleep(4.75)
                         robot.stop()
                         time.sleep(1)
@@ -148,7 +147,6 @@ def main():
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
-                        robot.SPEED = SPEED_CURVE
                         time.sleep(4.75)
                         robot.stop()
                         time.sleep(1)
