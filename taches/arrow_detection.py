@@ -115,7 +115,7 @@ def main():
     try:
         robot.SPEED = SPEED_STRAIGHT
         servos.set_angle(2, 85)
-        servos.set_angle(1, 93)
+        servos.set_angle(1, 87)
         servos.set_angle(0, ANGLE_CENTER_ROUE)
         robot.start()
         while True:
