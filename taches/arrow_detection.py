@@ -129,7 +129,7 @@ def main():
                 history.append(direction)
                 if len(history) > 5:
                     history.pop(0)
-                if sensor.get_distance_mm <= OBSTACLE_DIST_MM:
+                if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
 
@@ -146,11 +146,12 @@ def main():
                 latest_frame = frame.copy()
 
     except KeyboardInterrupt:
-        print("\nStop")
-
+            pass
     finally:
-        cam.stop()
-        cv2.destroyAllWindows()
+        robot.stop()
+        robot.hazard_off()
+        servos.set_angle(1, 90)
+        servos.set_angle(0, ANGLE_CENTER_ROUE)
 
 
 if __name__ == "__main__":
