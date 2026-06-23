@@ -30,12 +30,12 @@ class RobotController:
 
         threading.Thread(target=self._watch_distance, daemon=True).start()
 
-    def start(self):
+    def start(self, speed = SPEED):
         if self.moving:
             return
         self.moving = True
         self.hazard_off()
-        self.motors.drive(self.SPEED, ramp_time=1.0)
+        self.motors.drive(speed, ramp_time=1.0)
 
     def stop(self, ramp_time: float = 0.05):
         self.moving = False
