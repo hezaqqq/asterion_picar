@@ -100,10 +100,10 @@ def main():
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 1.8
+    REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 375
+    OBSTACLE_DIST_MM = 350
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
@@ -134,7 +134,7 @@ def main():
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         robot.SPEED = SPEED_CURVE
-                        time.sleep(5)
+                        time.sleep(4.75)
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MAX_ROUE)
@@ -149,7 +149,7 @@ def main():
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         robot.SPEED = SPEED_CURVE
-                        time.sleep(5)
+                        time.sleep(4.75)
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
