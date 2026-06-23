@@ -99,10 +99,10 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    REVERSE_TIME   = 1.55
+    REVERSE_TIME   = 1.5
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 355
+    OBSTACLE_DIST_MM = 340
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
