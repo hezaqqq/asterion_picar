@@ -98,7 +98,7 @@ def main():
     ANGLE_MAX_ROUE    = 140
 
     SPEED_STRAIGHT = 0.25
-    SPEED_CURVE    = 0.2
+    SPEED_CURVE    = 0.1
 
     REVERSE_TIME   = 1.9
     RAMP_TIME      = 0.2
