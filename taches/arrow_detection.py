@@ -115,7 +115,7 @@ def main():
     try:
         robot.SPEED = SPEED_STRAIGHT
         servos.set_angle(2, 85)
-        servos.set_angle(1, 90)
+        servos.set_angle(1, 93)
         servos.set_angle(0, ANGLE_CENTER_ROUE)
         robot.start()
         while True:
@@ -142,7 +142,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.7)
+                        time.sleep(0.9)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
 
@@ -157,7 +157,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.7)
+                        time.sleep(0.9)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
                         
