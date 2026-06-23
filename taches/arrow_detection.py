@@ -141,8 +141,9 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(1)
-                        robot.SPEED = SPEED_CURVE
+                        time.sleep(0.5)
+                        robot.stop()
+                        robot.start(SPEED_STRAIGHT)
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
@@ -155,8 +156,9 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(1)
-                        robot.SPEED = SPEED_CURVE
+                        time.sleep(0.5)
+                        robot.stop()
+                        robot.start(SPEED_STRAIGHT)
                         
 
 
