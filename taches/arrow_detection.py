@@ -97,12 +97,12 @@ def main():
     ANGLE_MIN_ROUE    = 70
     ANGLE_MAX_ROUE    = 130
 
-    SPEED_STRAIGHT = 0.2
+    SPEED_STRAIGHT = 0.225
 
-    REVERSE_TIME   = 2.15
-    RAMP_TIME      = 0.215
+    REVERSE_TIME   = 2.2
+    RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 435
+    OBSTACLE_DIST_MM = 45
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
