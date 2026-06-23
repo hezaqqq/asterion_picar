@@ -100,7 +100,7 @@ def main():
     SPEED_STRAIGHT = 0.25
     SPEED_CURVE    = 0.2
 
-    REVERSE_TIME   = 2.5
+    REVERSE_TIME   = 2.15
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 400
@@ -141,7 +141,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.5)
+                        time.sleep(0.75)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
 
@@ -156,7 +156,7 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.5)
+                        time.sleep(0.75)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
                         
