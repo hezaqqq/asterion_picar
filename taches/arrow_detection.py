@@ -94,15 +94,15 @@ def main():
     history = []
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 50
-    ANGLE_MAX_ROUE    = 160
+    ANGLE_MIN_ROUE    = 70
+    ANGLE_MAX_ROUE    = 130
 
     SPEED_STRAIGHT = 0.225
 
     REVERSE_TIME   = 1.535
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 345
+    OBSTACLE_DIST_MM = 450
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
@@ -132,7 +132,7 @@ def main():
 
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(4.75)
+                        time.sleep(6.5)
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MAX_ROUE)
@@ -140,13 +140,13 @@ def main():
                         time.sleep(REVERSE_TIME)
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(0.5)
+                        time.sleep(6)
                         robot.stop()
                         robot.start(SPEED_STRAIGHT)
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(4.75)
+                        time.sleep(6.5)
                         robot.stop()
                         time.sleep(1)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
