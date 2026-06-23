@@ -136,7 +136,6 @@ def main():
                         time.sleep(5)
                         robot.stop()
                         time.sleep(1)
-                        robot.start()
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         robot.start(-SPEED_CURVE)
                         time.sleep(REVERSE_TIME)
