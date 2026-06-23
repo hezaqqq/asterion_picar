@@ -3,7 +3,7 @@ import numpy as np
 import threading
 import time
 import robot_controller
-from taches.servo_controller import ServoController
+from servo_controller import ServoController
 import ultrasonic_sensor
 from flask import Flask, Response
 from picamera2 import Picamera2
