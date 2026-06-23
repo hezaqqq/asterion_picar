@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 import threading
+import time
+import robot_controller
+from taches.servo_controller import ServoController
+import ultrasonic_sensor
 from flask import Flask, Response
 from picamera2 import Picamera2
 
@@ -62,7 +66,7 @@ def detect_direction(frame):
 
     return direction, frame
 
-# ======================================SERVER CAMERA======================================================#
+
 app = Flask(__name__)
 def gen_stream():
     global latest_frame
@@ -82,17 +86,38 @@ def stream():
     return Response(gen_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 def run_server():
     app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
-# ========================================================================================================#
+
 
 def main():
     global latest_frame
     cam = get_camera()
     history = []
 
+    ANGLE_CENTER_ROUE = 100
+    ANGLE_MIN_ROUE    = 60
+    ANGLE_MAX_ROUE    = 140
+
+    SPEED_STRAIGHT = 0.25
+    SPEED_CURVE    = 0.25
+
+    REVERSE_TIME   = 2.25
+    RAMP_TIME      = 0.2
+
+    OBSTACLE_DIST_MM = 250
+
+    sensor    = ultrasonic_sensor.UltrasonicSensor()
+    robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
+    servos    = ServoController()
+
     # lance le serveur
     threading.Thread(target=run_server, daemon=True).start()
 
     try:
+        robot.SPEED = SPEED_STRAIGHT
+        servos.set_angle(2, 85)
+        servos.set_angle(1, 90)
+        servos.set_angle(0, ANGLE_CENTER_ROUE)
+        robot.start()
         while True:
             frame = read_frame(cam)
             if frame is None:
@@ -104,8 +129,18 @@ def main():
                 history.append(direction)
                 if len(history) > 5:
                     history.pop(0)
-                
-                stable = direction if history.count(direction) >= 3 else None
+                if sensor.get_distance_mm <= OBSTACLE_DIST_MM:
+                    if direction == "droite":
+                        servos.set_angle(0, ANGLE_MIN_ROUE)
+
+                    elif direction == "gauche":
+                        servos.set_angle(0, ANGLE_MAX_ROUE)
+
+                    else:
+                        servos.set_angle(0, ANGLE_CENTER_ROUE)
+                    
+                    time.sleep(2)
+                    
 
             with lock:
                 latest_frame = frame.copy()
