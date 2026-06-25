@@ -165,7 +165,7 @@ def main():
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_AVANCER+1)
+                        time.sleep(BREAKTIME_AVANCER+1.1)
                         robot.stop()
                         
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
