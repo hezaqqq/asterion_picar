@@ -94,15 +94,16 @@ def main():
     history = []
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 70
-    ANGLE_MAX_ROUE    = 130
+    ANGLE_MIN_ROUE    = 60
+    ANGLE_MAX_ROUE    = 140
 
     SPEED_STRAIGHT = 0.225
 
-    REVERSE_TIME   = 2.2
+    BREAKTIME = 0.5
+    STOPTIME = 1
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 435
+    OBSTACLE_DIST_MM = 350
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
@@ -112,11 +113,10 @@ def main():
     threading.Thread(target=run_server, daemon=True).start()
 
     try:
-        robot.SPEED = SPEED_STRAIGHT
         servos.set_angle(2, 85)
         servos.set_angle(1, 87)
         servos.set_angle(0, ANGLE_CENTER_ROUE)
-        robot.start()
+        robot.start(SPEED_STRAIGHT)
         while True:
             frame = read_frame(cam)
             if frame is None:
@@ -132,31 +132,41 @@ def main():
 
                     if direction == "droite":
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(5)
+                        time.sleep(BREAKTIME)
                         robot.stop()
-                        time.sleep(1)
-                        servos.set_angle(0, 140)
+
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MAX_ROUE)
+                        time.sleep(BREAKTIME)
                         robot.start(-SPEED_STRAIGHT)
-                        time.sleep(REVERSE_TIME)
-                        time.sleep(1)
-                        servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(1.5)
+                        time.sleep(BREAKTIME)
                         robot.stop()
+
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MIN_ROUE)
+                        time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
+                        time.sleep(BREAKTIME)
+                        robot.stop()
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(5)
+                        time.sleep(BREAKTIME)
                         robot.stop()
-                        time.sleep(1)
-                        servos.set_angle(0, 60)
+
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MIN_ROUE)
+                        time.sleep(BREAKTIME)
                         robot.start(-SPEED_STRAIGHT)
-                        time.sleep(REVERSE_TIME)
-                        time.sleep(1)
-                        servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(1.5)
+                        time.sleep(BREAKTIME)
                         robot.stop()
+
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MAX_ROUE)
+                        time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
+                        time.sleep(BREAKTIME)
+                        robot.stop()
                         
 
 
