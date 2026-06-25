@@ -139,7 +139,7 @@ def main():
                         time.sleep(BREAKTIME_AVANCER)
                         robot.stop()
 
-                        for i in range(3):
+                        for i in range(2):
                             time.sleep(STOPTIME)
                             servos.set_angle(0, ANGLE_MAX_ROUE)
                             time.sleep(BREAKTIME)
@@ -153,6 +153,20 @@ def main():
                             robot.start(SPEED_STRAIGHT)
                             time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
+                        
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MAX_ROUE)
+                        time.sleep(BREAKTIME)
+                        robot.start(-SPEED_STRAIGHT)
+                        time.sleep(BREAKTIME_RECULER)
+                        robot.stop()
+
+                        time.sleep(STOPTIME)
+                        servos.set_angle(0, ANGLE_MIN_ROUE)
+                        time.sleep(BREAKTIME)
+                        robot.start(SPEED_STRAIGHT)
+                        time.sleep(BREAKTIME_AVANCER+1)
+                        robot.stop()
                         
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         time.sleep(BREAKTIME)
