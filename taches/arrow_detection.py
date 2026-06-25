@@ -99,7 +99,7 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    BREAKTIME = 0.1
+    BREAKTIME = 0.5
     STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
@@ -131,6 +131,7 @@ def main():
                 if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
 
                     if direction == "droite":
+                        time.sleep(1)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         time.sleep(BREAKTIME)
                         robot.stop()
