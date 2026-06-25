@@ -101,7 +101,7 @@ def main():
 
     BREAKTIME = 0.5
     BREAKTIME_AVANCER = 0.5
-    BREAKTIME_RECULER = 0.2
+    BREAKTIME_RECULER = 0.1
     STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
@@ -131,9 +131,8 @@ def main():
                 if len(history) > 5:
                     history.pop(0)
                 if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
-
+                    time.sleep(0.25)
                     if direction == "droite":
-                        time.sleep(0.2)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         time.sleep(BREAKTIME_AVANCER)
                         robot.stop()
@@ -152,6 +151,8 @@ def main():
                             robot.start(SPEED_STRAIGHT)
                             time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
+                        
+                        robot.start(SPEED_STRAIGHT)
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
