@@ -233,9 +233,13 @@ class RedLineFollowingController:
             self.robot.hazard_off()
 
 
-if __name__ == "__main__":
+def run():
     controller = RedLineFollowingController(camera_id=0, debug_stream=True)
     try:
         controller.start()
     except KeyboardInterrupt:
         controller.stop()
+
+
+if __name__ == "__main__":
+    run()
