@@ -131,7 +131,7 @@ def main():
                 if sensor.get_distance_mm() <= OBSTACLE_DIST_MM:
 
                     if direction == "droite":
-                        time.sleep(1)
+                        time.sleep(0.2)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         time.sleep(BREAKTIME)
                         robot.stop()
