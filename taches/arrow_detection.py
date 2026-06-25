@@ -101,7 +101,7 @@ def main():
 
     BREAKTIME = 0.5
     BREAKTIME_AVANCER = 0.5
-    BREAKTIME_RECULER = 0.3
+    BREAKTIME_RECULER = 0.2
     STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
@@ -138,7 +138,7 @@ def main():
                         time.sleep(BREAKTIME_AVANCER)
                         robot.stop()
 
-                        for i in range(5):
+                        for i in range(4):
                             time.sleep(STOPTIME)
                             servos.set_angle(0, ANGLE_MAX_ROUE)
                             time.sleep(BREAKTIME)
