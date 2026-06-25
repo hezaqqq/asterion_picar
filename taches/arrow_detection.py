@@ -94,8 +94,8 @@ def main():
     history = []
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 59
-    ANGLE_MAX_ROUE    = 141
+    ANGLE_MIN_ROUE    = 57
+    ANGLE_MAX_ROUE    = 143
 
     SPEED_STRAIGHT = 0.225
 
@@ -154,7 +154,9 @@ def main():
                         
                         servos.set_angle(0, ANGLE_CENTER_ROUE)
                         time.sleep(BREAKTIME)
-                        robot.start(SPEED_STRAIGHT)
+                        robot.start(-SPEED_STRAIGHT)
+                        time.sleep(BREAKTIME_RECULER)
+                        robot.stop()
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
