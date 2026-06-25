@@ -116,7 +116,7 @@ def main():
 
     try:
         servos.set_angle(2, 85)
-        servos.set_angle(1, 87)
+        servos.set_angle(1, 85)
         servos.set_angle(0, ANGLE_MIN_ROUE)
         time.sleep(0.2)
         servos.set_angle(0, ANGLE_CENTER_ROUE)
