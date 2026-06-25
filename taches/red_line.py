@@ -27,18 +27,13 @@ class RedLineFollowingController:
 
     WHEEL_CENTER      = 100
     HEAD_PAN_CENTER   = 100
-    HEAD_TILT_ANGLE   = 130
+    HEAD_TILT_ANGLE   = 150
 
     ANGLE_MIN         = 60
     ANGLE_MAX         = 140
     STEERING_GAIN     = 30
 
-    SPEED_STRAIGHT    = 0.36
-    SPEED_SLIGHT      = 0.22
-    SPEED_CURVE       = 0.20
-
-    OFFSET_SLIGHT     = 0.15
-    OFFSET_CURVE      = 0.35
+    SPEED = 0.3
 
     LOWER_RED_1 = np.array([0, 100, 80])
     UPPER_RED_1 = np.array([10, 255, 255])
@@ -46,10 +41,10 @@ class RedLineFollowingController:
     UPPER_RED_2 = np.array([180, 255, 255])
     MIN_CONTOUR_AREA = 500
 
-    LINE_LOST_TIMEOUT = 1.2 
+    LINE_LOST_TIMEOUT = 1.2
 
     CAMERA_SIZE = (640, 480)
-    ROI_TOP_RATIO = 0.5 
+    ROI_TOP_RATIO = 0.5
 
     def __init__(self, camera_id=0, debug_stream=False, debug_port=5000):
         self.robot   = robot.RobotController()
@@ -95,11 +90,7 @@ class RedLineFollowingController:
         else:
             self._cam.release()
 
-    # ------------------------------------------------------------------
-    # Détection de la ligne rouge
-    # ------------------------------------------------------------------
     def _find_line_offset(self, frame):
-        """Retourne (offset, frame_annotee). offset in [-1, 1], None si pas de ligne."""
         h, w = frame.shape[:2]
         roi_top = int(h * self.ROI_TOP_RATIO)
         roi = frame[roi_top:h, :]
@@ -128,20 +119,11 @@ class RedLineFollowingController:
         cy = int(M["m01"] / M["m00"])
         offset = (cx - (w / 2)) / (w / 2)
 
-        # Annotation (sur la ROI, qu'on replace dans le frame complet)
         cv2.drawContours(roi, [c], -1, (0, 255, 0), 2)
         cv2.circle(roi, (cx, cy), 6, (255, 0, 0), -1)
         frame[roi_top:h, :] = roi
 
         return offset, frame
-
-    def _speed_for_offset(self, offset: float) -> float:
-        a = abs(offset)
-        if a >= self.OFFSET_CURVE:
-            return self.SPEED_CURVE
-        if a >= self.OFFSET_SLIGHT:
-            return self.SPEED_SLIGHT
-        return self.SPEED_STRAIGHT
 
     def _clamp_angle(self, angle: float) -> float:
         return max(self.ANGLE_MIN, min(self.ANGLE_MAX, angle))
@@ -172,9 +154,6 @@ class RedLineFollowingController:
 
         app.run(host='0.0.0.0', port=self.debug_port, debug=False, use_reloader=False)
 
-    # ------------------------------------------------------------------
-    # Boucle principale
-    # ------------------------------------------------------------------
     def _follow_loop(self):
         self.servos.set_angle(self.HEAD_TILT_CHANNEL, self.HEAD_TILT_ANGLE)
         self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
@@ -182,7 +161,7 @@ class RedLineFollowingController:
         time.sleep(0.5)
 
         self._cam = self._open_camera()
-        self.robot.SPEED = self.SPEED_STRAIGHT
+        self.robot.SPEED = self.SPEED
         self.robot.start()
 
         line_lost_since = None
@@ -201,7 +180,6 @@ class RedLineFollowingController:
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
-                self.robot.SPEED = self._speed_for_offset(offset)
                 if not self.robot.moving:
                     self.robot.start()
 
@@ -211,12 +189,7 @@ class RedLineFollowingController:
 
                 elapsed = time.time() - line_lost_since
 
-                if elapsed <= self.LINE_LOST_TIMEOUT:
-                    # Petit trou / coupure passagère : on garde le dernier angle,
-                    # on continue tout droit prudemment sans tourner aveuglément.
-                    self.robot.SPEED = self.SPEED_SLIGHT
-                else:
-                    # Ligne vraiment perdue : on s'arrête et on recentre la direction.
+                if elapsed > self.LINE_LOST_TIMEOUT:
                     self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
                     if self.robot.moving:
                         self.robot.stop()
@@ -260,9 +233,13 @@ class RedLineFollowingController:
             self.robot.hazard_off()
 
 
-if __name__ == "__main__":
+def run():
     controller = RedLineFollowingController(camera_id=0, debug_stream=True)
     try:
         controller.start()
     except KeyboardInterrupt:
         controller.stop()
+
+
+if __name__ == "__main__":
+    run()
