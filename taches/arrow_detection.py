@@ -99,11 +99,11 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    BREAKTIME = 0.5
-    STOPTIME = 1
+    BREAKTIME = 0.1
+    STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 350
+    OBSTACLE_DIST_MM = 200
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
@@ -135,19 +135,20 @@ def main():
                         time.sleep(BREAKTIME)
                         robot.stop()
 
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(-SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME)
-                        robot.stop()
+                        for i in range(5):
+                            time.sleep(STOPTIME)
+                            servos.set_angle(0, ANGLE_MAX_ROUE)
+                            time.sleep(BREAKTIME)
+                            robot.start(-SPEED_STRAIGHT)
+                            time.sleep(BREAKTIME)
+                            robot.stop()
 
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME)
-                        robot.stop()
+                            time.sleep(STOPTIME)
+                            servos.set_angle(0, ANGLE_MIN_ROUE)
+                            time.sleep(BREAKTIME)
+                            robot.start(SPEED_STRAIGHT)
+                            time.sleep(BREAKTIME)
+                            robot.stop()
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
