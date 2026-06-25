@@ -103,7 +103,7 @@ def main():
     STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 200
+    OBSTACLE_DIST_MM = 250
 
     sensor    = ultrasonic_sensor.UltrasonicSensor()
     robot     = robot_controller.RobotController(sensor=sensor, auto_watch=False)
