@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
-import motor_controller as motors
-import servo_controller as servos
+import threading
+import time
+import robot_controller
+from servo_controller import ServoController
+import ultrasonic_sensor
 
 # =========================
 # CONSTANTES
@@ -23,6 +26,8 @@ BASE_SPEED = 0.3
 # =========================
 # INITIALISATION
 # =========================
+
+
 
 cap = cv2.VideoCapture(CAMERA_ID)
 
