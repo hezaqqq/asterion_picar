@@ -99,7 +99,7 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    BREAKTIME = 0.5
+    BREAKTIME = 0.05
     BREAKTIME_AVANCER = 0.55
     BREAKTIME_RECULER = 0.05
     STOPTIME = 0.5
@@ -165,7 +165,7 @@ def main():
                         servos.set_angle(0, ANGLE_MIN_ROUE)
                         time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_AVANCER+1.1)
+                        time.sleep(BREAKTIME_AVANCER+1.15)
                         robot.stop()
                         
                         servos.set_angle(0, ANGLE_MIN_ROUE)
@@ -209,7 +209,7 @@ def main():
                         servos.set_angle(0, ANGLE_MAX_ROUE)
                         time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_AVANCER+1.1)
+                        time.sleep(BREAKTIME_AVANCER+1.15)
                         robot.stop()
                         
                         servos.set_angle(0, ANGLE_MIN_ROUE)
