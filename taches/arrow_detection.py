@@ -94,8 +94,8 @@ def main():
     history = []
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 55.5
-    ANGLE_MAX_ROUE    = 144.5
+    ANGLE_MIN_ROUE    = 54.5
+    ANGLE_MAX_ROUE    = 145.5
 
     SPEED_STRAIGHT = 0.225
 
@@ -139,7 +139,7 @@ def main():
                         time.sleep(BREAKTIME_AVANCER)
                         robot.stop()
 
-                        for i in range(3):
+                        for i in range(2):
                             time.sleep(STOPTIME)
                             servos.set_angle(0, ANGLE_MAX_ROUE)
                             time.sleep(BREAKTIME)
