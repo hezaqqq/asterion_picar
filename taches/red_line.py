@@ -1,130 +1,268 @@
+import time
+import threading
+
 import cv2
 import numpy as np
-import threading
-import time
-import robot_controller
-from servo_controller import ServoController
-import ultrasonic_sensor
 
-# =========================
-# CONSTANTES
-# =========================
+import servo_controller as servo
+import robot_controller as robot
 
-CAMERA_ID = 0
+try:
+    from picamera2 import Picamera2
+    HAS_PICAMERA2 = True
+except ImportError:
+    HAS_PICAMERA2 = False
 
-# Servo direction (roues)
-STEERING_CHANNEL = 1
-CENTER_STEERING = 90
-
-# Servo tête verticale
-HEAD_TILT_CHANNEL = 2
-HEAD_TILT_ANGLE = 130  # à ajuster selon ton montage
-
-# Vitesse du robot
-BASE_SPEED = 0.3
-
-# =========================
-# INITIALISATION
-# =========================
+try:
+    from flask import Flask, Response
+    HAS_FLASK = True
+except ImportError:
+    HAS_FLASK = False
 
 
+class RedLineFollowingController:
+    WHEEL_CHANNEL     = 0
+    HEAD_PAN_CHANNEL  = 1
+    HEAD_TILT_CHANNEL = 2
 
-cap = cv2.VideoCapture(CAMERA_ID)
+    WHEEL_CENTER      = 100
+    HEAD_PAN_CENTER   = 100
+    HEAD_TILT_ANGLE   = 130
 
-servos.set_angle(HEAD_TILT_CHANNEL, HEAD_TILT_ANGLE)
-servos.set_angle(STEERING_CHANNEL, CENTER_STEERING)
+    ANGLE_MIN         = 60
+    ANGLE_MAX         = 140
+    STEERING_GAIN     = 30
 
-# =========================
-# BOUCLE PRINCIPALE
-# =========================
+    SPEED_STRAIGHT    = 0.36
+    SPEED_SLIGHT      = 0.22
+    SPEED_CURVE       = 0.20
 
-while True:
+    OFFSET_SLIGHT     = 0.15
+    OFFSET_CURVE      = 0.35
 
-    ret, frame = cap.read()
+    LOWER_RED_1 = np.array([0, 100, 80])
+    UPPER_RED_1 = np.array([10, 255, 255])
+    LOWER_RED_2 = np.array([170, 100, 80])
+    UPPER_RED_2 = np.array([180, 255, 255])
+    MIN_CONTOUR_AREA = 500
 
-    if not ret:
-        continue
+    LINE_LOST_TIMEOUT = 1.2 
 
-    h, w = frame.shape[:2]
+    CAMERA_SIZE = (640, 480)
+    ROI_TOP_RATIO = 0.5 
 
-    roi = frame[int(h * 0.6):h, :]
+    def __init__(self, camera_id=0, debug_stream=False, debug_port=5000):
+        self.robot   = robot.RobotController()
+        self.servos  = servo.ServoController()
+        self.camera_id = camera_id
+        self.debug_stream = debug_stream and HAS_FLASK
+        self.debug_port = debug_port
 
-    hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        self._running = False
+        self._cam = None
+        self._cam_is_picamera2 = False
 
-    lower_red1 = np.array([0, 150, 150])
-    upper_red1 = np.array([10, 255, 255])
+        self._latest_frame = None
+        self._frame_lock = threading.Lock()
 
-    lower_red2 = np.array([170, 150, 150])
-    upper_red2 = np.array([180, 255, 255])
+    def _open_camera(self):
+        if HAS_PICAMERA2:
+            cam = Picamera2()
+            cam.configure(cam.create_preview_configuration(
+                main={"size": self.CAMERA_SIZE, "format": "RGB888"}
+            ))
+            cam.start()
+            self._cam_is_picamera2 = True
+            return cam
+        else:
+            cam = cv2.VideoCapture(self.camera_id)
+            cam.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_SIZE[0])
+            cam.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_SIZE[1])
+            self._cam_is_picamera2 = False
+            return cam
 
-    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
-    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+    def _read_frame(self):
+        if self._cam_is_picamera2:
+            return self._cam.capture_array()
+        ret, frame = self._cam.read()
+        return frame if ret else None
 
-    mask_red = cv2.bitwise_or(mask1, mask2)
+    def _close_camera(self):
+        if self._cam is None:
+            return
+        if self._cam_is_picamera2:
+            self._cam.stop()
+        else:
+            self._cam.release()
 
-    kernel = np.ones((5, 5), np.uint8)
+    # ------------------------------------------------------------------
+    # Détection de la ligne rouge
+    # ------------------------------------------------------------------
+    def _find_line_offset(self, frame):
+        """Retourne (offset, frame_annotee). offset in [-1, 1], None si pas de ligne."""
+        h, w = frame.shape[:2]
+        roi_top = int(h * self.ROI_TOP_RATIO)
+        roi = frame[roi_top:h, :]
 
-    mask_red = cv2.morphologyEx(mask_red, cv2.MORPH_OPEN, kernel)
-    mask_red = cv2.morphologyEx(mask_red, cv2.MORPH_CLOSE, kernel)
+        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, self.LOWER_RED_1, self.UPPER_RED_1) | \
+               cv2.inRange(hsv, self.LOWER_RED_2, self.UPPER_RED_2)
 
-    points = []
+        kernel = np.ones((5, 5), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
-    h_mask, w_mask = mask_red.shape
+        cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if not cnts:
+            return None, frame
 
-    for x in range(w_mask):
-        ys = np.where(mask_red[:, x] > 0)[0]
+        c = max(cnts, key=cv2.contourArea)
+        if cv2.contourArea(c) < self.MIN_CONTOUR_AREA:
+            return None, frame
 
-        if len(ys) > 0:
-            cy = int(np.mean(ys))
-            points.append((x, cy))
+        M = cv2.moments(c)
+        if M["m00"] == 0:
+            return None, frame
 
-    for i in range(1, len(points)):
-        cv2.line(roi, points[i - 1], points[i], (0, 255, 0), 2)
+        cx = int(M["m10"] / M["m00"])
+        cy = int(M["m01"] / M["m00"])
+        offset = (cx - (w / 2)) / (w / 2)
 
-    if len(points) > 20:
+        # Annotation (sur la ROI, qu'on replace dans le frame complet)
+        cv2.drawContours(roi, [c], -1, (0, 255, 0), 2)
+        cv2.circle(roi, (cx, cy), 6, (255, 0, 0), -1)
+        frame[roi_top:h, :] = roi
 
-        target_index = int(len(points) * 0.25)
+        return offset, frame
 
-        target_x = points[target_index][0]
+    def _speed_for_offset(self, offset: float) -> float:
+        a = abs(offset)
+        if a >= self.OFFSET_CURVE:
+            return self.SPEED_CURVE
+        if a >= self.OFFSET_SLIGHT:
+            return self.SPEED_SLIGHT
+        return self.SPEED_STRAIGHT
 
-        center_x = w_mask // 2
+    def _clamp_angle(self, angle: float) -> float:
+        return max(self.ANGLE_MIN, min(self.ANGLE_MAX, angle))
 
-        error = target_x - center_x
+    def _run_debug_server(self):
+        app = Flask(__name__)
 
-        steering = np.clip(error * 0.15, -30, 30)
+        def gen_stream():
+            while self._running:
+                with self._frame_lock:
+                    frame = self._latest_frame
+                if frame is None:
+                    time.sleep(0.05)
+                    continue
+                ok, jpg = cv2.imencode('.jpg', frame)
+                if ok:
+                    yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n'
+                           + jpg.tobytes() + b'\r\n')
 
-        direction_angle = CENTER_STEERING + steering
+        @app.route('/')
+        def index():
+            return '<img src="/stream">'
 
-        servos.set_angle(
-            STEERING_CHANNEL,
-            int(direction_angle)
-        )
+        @app.route('/stream')
+        def stream():
+            return Response(gen_stream(),
+                             mimetype='multipart/x-mixed-replace; boundary=frame')
 
-        motors.forward(BASE_SPEED)
+        app.run(host='0.0.0.0', port=self.debug_port, debug=False, use_reloader=False)
 
-        cv2.circle(
-            roi,
-            (target_x, points[target_index][1]),
-            8,
-            (255, 0, 0),
-            -1
-        )
+    # ------------------------------------------------------------------
+    # Boucle principale
+    # ------------------------------------------------------------------
+    def _follow_loop(self):
+        self.servos.set_angle(self.HEAD_TILT_CHANNEL, self.HEAD_TILT_ANGLE)
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
+        self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+        time.sleep(0.5)
 
-    else:
-        motors.stop()
+        self._cam = self._open_camera()
+        self.robot.SPEED = self.SPEED_STRAIGHT
+        self.robot.start()
 
-    cv2.imshow("Line Following", frame)
-    cv2.imshow("Red Mask", mask_red)
+        line_lost_since = None
 
-    if cv2.waitKey(1) & 0xFF == 27:
-        break
+        while self._running:
+            frame = self._read_frame()
+            if frame is None:
+                continue
 
-# =========================
-# FIN
-# =========================
+            offset, annotated = self._find_line_offset(frame)
 
-motors.stop()
-servos.set_angle(STEERING_CHANNEL, CENTER_STEERING)
+            if offset is not None:
+                line_lost_since = None
 
-cap.release()
-cv2.destroyAllWindows()
+                angle = self.WHEEL_CENTER + offset * self.STEERING_GAIN
+                angle = self._clamp_angle(angle)
+                self.servos.set_angle(self.WHEEL_CHANNEL, angle)
+
+                self.robot.SPEED = self._speed_for_offset(offset)
+                if not self.robot.moving:
+                    self.robot.start()
+
+            else:
+                if line_lost_since is None:
+                    line_lost_since = time.time()
+
+                elapsed = time.time() - line_lost_since
+
+                if elapsed <= self.LINE_LOST_TIMEOUT:
+                    # Petit trou / coupure passagère : on garde le dernier angle,
+                    # on continue tout droit prudemment sans tourner aveuglément.
+                    self.robot.SPEED = self.SPEED_SLIGHT
+                else:
+                    # Ligne vraiment perdue : on s'arrête et on recentre la direction.
+                    self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+                    if self.robot.moving:
+                        self.robot.stop()
+
+            if self.debug_stream:
+                with self._frame_lock:
+                    self._latest_frame = annotated
+
+            time.sleep(0.02)
+
+    def start(self):
+        self._running = True
+
+        if self.debug_stream:
+            threading.Thread(target=self._run_debug_server, daemon=True).start()
+
+        try:
+            self._follow_loop()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            self.stop()
+
+    def start_async(self) -> threading.Thread:
+        self._running = True
+        if self.debug_stream:
+            threading.Thread(target=self._run_debug_server, daemon=True).start()
+        t = threading.Thread(target=self._follow_loop, daemon=True)
+        t.start()
+        return t
+
+    def stop(self):
+        self._running = False
+        self._close_camera()
+        self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
+        time.sleep(0.2)
+        self.servos.release()
+        self.robot.stop()
+        if hasattr(self.robot, "hazard_off"):
+            self.robot.hazard_off()
+
+
+if __name__ == "__main__":
+    controller = RedLineFollowingController(camera_id=0, debug_stream=True)
+    try:
+        controller.start()
+    except KeyboardInterrupt:
+        controller.stop()
