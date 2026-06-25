@@ -100,6 +100,8 @@ def main():
     SPEED_STRAIGHT = 0.225
 
     BREAKTIME = 0.5
+    BREAKTIME_AVANCER = 0.5
+    BREAKTIME_RECULER = 0.3
     STOPTIME = 0.5
     RAMP_TIME      = 0.2
 
@@ -133,7 +135,7 @@ def main():
                     if direction == "droite":
                         time.sleep(0.2)
                         servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(BREAKTIME)
+                        time.sleep(BREAKTIME_AVANCER)
                         robot.stop()
 
                         for i in range(5):
@@ -141,14 +143,14 @@ def main():
                             servos.set_angle(0, ANGLE_MAX_ROUE)
                             time.sleep(BREAKTIME)
                             robot.start(-SPEED_STRAIGHT)
-                            time.sleep(BREAKTIME)
+                            time.sleep(BREAKTIME_RECULER)
                             robot.stop()
 
                             time.sleep(STOPTIME)
                             servos.set_angle(0, ANGLE_MIN_ROUE)
                             time.sleep(BREAKTIME)
                             robot.start(SPEED_STRAIGHT)
-                            time.sleep(BREAKTIME)
+                            time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
 
                     elif direction == "gauche":
