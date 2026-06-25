@@ -94,8 +94,8 @@ def main():
     history = []
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 60
-    ANGLE_MAX_ROUE    = 140
+    ANGLE_MIN_ROUE    = 59
+    ANGLE_MAX_ROUE    = 141
 
     SPEED_STRAIGHT = 0.225
 
