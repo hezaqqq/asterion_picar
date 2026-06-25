@@ -152,6 +152,8 @@ def main():
                             time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
                         
+                        servos.set_angle(0, ANGLE_CENTER_ROUE)
+                        time.sleep(BREAKTIME)
                         robot.start(SPEED_STRAIGHT)
 
                     elif direction == "gauche":
