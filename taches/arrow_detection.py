@@ -119,7 +119,7 @@ def main():
         servos.set_angle(1, 85)
         servos.set_angle(0, ANGLE_MIN_ROUE)
         time.sleep(0.2)
-        servos.set_angle(0, ANGLE_CENTER_ROUE)
+        servos.set_angle(0, 101)
         robot.start(SPEED_STRAIGHT)
         while True:
             frame = read_frame(cam)
