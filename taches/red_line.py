@@ -222,6 +222,7 @@ class RedLineFollowingController:
                 steer_offset = -offset if self.STEERING_INVERT else offset
                 angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
+                print(f"offset={offset:.2f} angle={angle:.1f}")
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
                 if not self.robot.moving:
