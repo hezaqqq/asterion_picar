@@ -35,7 +35,7 @@ class RedLineFollowingController:
     STEERING_INVERT   = True
     
     # Set to True to flip the head movement so it turns the same side as the wheels
-    HEAD_PAN_INVERT   = True 
+    HEAD_PAN_INVERT   = False 
     HEAD_FOLLOW_GAIN  = 15
     OFFSET_BIAS       = 0.0
 
