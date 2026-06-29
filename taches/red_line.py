@@ -26,7 +26,7 @@ class RedLineFollowingController:
     HEAD_TILT_CHANNEL = 2
 
     WHEEL_CENTER      = 100
-    HEAD_PAN_CENTER   = 90
+    HEAD_PAN_CENTER   = 110
     HEAD_TILT_ANGLE   = 70
 
     ANGLE_MIN         = 50
@@ -56,8 +56,6 @@ class RedLineFollowingController:
         self.robot   = robot.RobotController()
         self.servos  = servo.ServoController()
         self.camera_id = camera_id
-        if debug_stream and not HAS_FLASK:
-            print("Flask n'est pas installé, debug_stream désactivé (pip install flask)")
         self.debug_stream = debug_stream and HAS_FLASK
         self.debug_port = debug_port
 
@@ -259,7 +257,7 @@ class RedLineFollowingController:
 
         try:
             self._follow_loop()
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, Exception):
             pass
         finally:
             self.stop()
@@ -275,11 +273,11 @@ class RedLineFollowingController:
     def stop(self):
         self._running = False
         self._close_camera()
+        self.robot.stop()
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL, 90)
         self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
-        self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
         time.sleep(0.2)
         self.servos.release()
-        self.robot.stop()
 
 
 def run():
@@ -287,7 +285,9 @@ def run():
     try:
         controller.start()
     except KeyboardInterrupt:
-        controller.stop()
+            pass
+    finally:
+        robot.stop()
 
 
 if __name__ == "__main__":
