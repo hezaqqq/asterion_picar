@@ -26,14 +26,15 @@ class RedLineFollowingController:
     HEAD_TILT_CHANNEL = 2
 
     WHEEL_CENTER      = 100
-    HEAD_PAN_CENTER   = 85
+    HEAD_PAN_CENTER   = 110
     HEAD_TILT_ANGLE   = 70
 
-    ANGLE_MIN         = 40
-    ANGLE_MAX         = 160
+    ANGLE_MIN         = 50
+    ANGLE_MAX         = 150
     STEERING_GAIN     = 60
     STEERING_INVERT   = True
     OFFSET_BIAS       = 0.0
+    HEAD_FOLLOW_GAIN  = 15
 
     SPEED = 0.3
 
@@ -225,6 +226,10 @@ class RedLineFollowingController:
                 angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
+
+                pan_angle = self.HEAD_PAN_CENTER + steer_offset * self.HEAD_FOLLOW_GAIN
+                pan_angle = self._clamp_angle(pan_angle)
+                self.servos.set_angle(self.HEAD_PAN_CHANNEL, pan_angle)
 
                 if not self.robot.moving:
                     self.robot.start()
