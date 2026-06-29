@@ -99,11 +99,10 @@ def main():
 
     SPEED_STRAIGHT = 0.225
 
-    BREAKTIME = 0.5
-    BREAKTIME_AVANCER = 0.55
-    BREAKTIME_RECULER = 0.05
+    BREAKTIME = 0.2
+    BREAKTIME_AVANCER = 4
+    BREAKTIME_RECULER = 1
     STOPTIME = 0.5
-    RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 250
 
@@ -154,29 +153,6 @@ def main():
                             time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
                         
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(-SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_RECULER)
-                        robot.stop()
-
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_AVANCER+1.15)
-                        robot.stop()
-                        
-                        servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(0.2)
-                        servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(-SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_RECULER+0.3)
-                        robot.stop()
-                        time.sleep(STOPTIME)
-                        robot.start(SPEED_STRAIGHT)
 
                     elif direction == "gauche":
                         servos.set_angle(0, ANGLE_MAX_ROUE)
@@ -197,30 +173,6 @@ def main():
                             robot.start(SPEED_STRAIGHT)
                             time.sleep(BREAKTIME_AVANCER)
                             robot.stop()
-                        
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(-SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_RECULER)
-                        robot.stop()
-
-                        time.sleep(STOPTIME)
-                        servos.set_angle(0, ANGLE_MAX_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_AVANCER+1.15)
-                        robot.stop()
-                        
-                        servos.set_angle(0, ANGLE_MIN_ROUE)
-                        time.sleep(0.2)
-                        servos.set_angle(0, ANGLE_CENTER_ROUE)
-                        time.sleep(BREAKTIME)
-                        robot.start(-SPEED_STRAIGHT)
-                        time.sleep(BREAKTIME_RECULER+0.3)
-                        robot.stop()
-                        time.sleep(STOPTIME)
-                        robot.start(SPEED_STRAIGHT)
                         
 
 
