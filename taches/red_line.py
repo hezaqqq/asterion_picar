@@ -42,16 +42,10 @@ class RedLineFollowingController:
     UPPER_RED_1 = np.array([10, 255, 255])
     LOWER_RED_2 = np.array([170, 100, 80])
     UPPER_RED_2 = np.array([180, 255, 255])
+    # Monte à 1500 ou 2000 si le robot réagit à des petits reflets rouges
     MIN_CONTOUR_AREA = 500
 
-    LINE_LOST_TIMEOUT = 1.2
-
-    SEARCH_PAN_AMPLITUDE = 25
-    SEARCH_PAN_SPEED     = 40
-    SEARCH_SPIN_SPEED    = 0.2
-    SEARCH_GIVE_UP_TIME  = 6.0
-
-    CAMERA_SIZE = (640, 480)
+    CAMERA_SIZE   = (640, 480)
     ROI_TOP_RATIO = 0.5
 
     def __init__(self, camera_id=0, debug_stream=False, debug_port=5000):
@@ -81,7 +75,7 @@ class RedLineFollowingController:
             return cam
         else:
             cam = cv2.VideoCapture(self.camera_id)
-            cam.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_SIZE[0])
+            cam.set(cv2.CAP_PROP_FRAME_WIDTH,  self.CAMERA_SIZE[0])
             cam.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_SIZE[1])
             self._cam_is_picamera2 = False
             return cam
@@ -105,12 +99,12 @@ class RedLineFollowingController:
         roi_top = int(h * self.ROI_TOP_RATIO)
         roi = frame[roi_top:h, :]
 
-        hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        hsv  = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, self.LOWER_RED_1, self.UPPER_RED_1) | \
                cv2.inRange(hsv, self.LOWER_RED_2, self.UPPER_RED_2)
 
         kernel = np.ones((5, 5), np.uint8)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN,  kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 
         cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -127,7 +121,7 @@ class RedLineFollowingController:
 
         cx = int(M["m10"] / M["m00"])
         cy = int(M["m01"] / M["m00"])
-        offset = (cx - (w / 2)) / (w / 2)
+        offset  = (cx - (w / 2)) / (w / 2)
         offset -= self.OFFSET_BIAS
 
         cv2.drawContours(roi, [c], -1, (0, 255, 0), 2)
@@ -161,7 +155,7 @@ class RedLineFollowingController:
         @app.route('/stream')
         def stream():
             return Response(gen_stream(),
-                             mimetype='multipart/x-mixed-replace; boundary=frame')
+                            mimetype='multipart/x-mixed-replace; boundary=frame')
 
         print(f"Serveur de debug démarré sur http://0.0.0.0:{self.debug_port}")
         try:
@@ -172,13 +166,12 @@ class RedLineFollowingController:
 
     def _follow_loop(self):
         self.servos.set_angle(self.HEAD_TILT_CHANNEL, self.HEAD_TILT_ANGLE)
-        self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
-        self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL,  self.HEAD_PAN_CENTER)
+        self.servos.set_angle(self.WHEEL_CHANNEL,     self.WHEEL_CENTER)
         time.sleep(0.5)
 
         self._cam = self._open_camera()
         self.robot.SPEED = self.SPEED
-        self.robot.start()
 
         while self._running:
             frame = self._read_frame()
@@ -188,7 +181,9 @@ class RedLineFollowingController:
             offset, annotated = self._find_line_offset(frame)
 
             if offset is not None:
+                # Ligne détectée → avancer et suivre
                 steer_offset = -offset if self.STEERING_INVERT else offset
+
                 angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
@@ -201,10 +196,9 @@ class RedLineFollowingController:
                     self.robot.start()
 
             else:
-                # Plus de rouge → arrêt immédiat + recentrage
-                if self.robot.moving:
-                    self.robot.stop()
-                self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+                # Pas de rouge → arrêt immédiat + recentrage
+                self.robot.stop()
+                self.servos.set_angle(self.WHEEL_CHANNEL,    self.WHEEL_CENTER)
                 self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
 
             if self.debug_stream:
@@ -238,8 +232,8 @@ class RedLineFollowingController:
         self._running = False
         self._close_camera()
         self.robot.stop()
-        self.servos.set_angle(self.HEAD_PAN_CHANNEL, 90)
-        self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
+        self.servos.set_angle(self.WHEEL_CHANNEL,    self.WHEEL_CENTER)
         time.sleep(0.2)
         self.servos.release()
 
@@ -249,7 +243,6 @@ def run():
     try:
         controller.start()
     except KeyboardInterrupt:
-        robot.stop()
         controller.stop()
 
 
