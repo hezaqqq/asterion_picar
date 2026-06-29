@@ -32,6 +32,7 @@ class RedLineFollowingController:
     ANGLE_MIN         = 60
     ANGLE_MAX         = 140
     STEERING_GAIN     = 30
+    STEERING_INVERT   = False
 
     SPEED = 0.3
 
@@ -218,7 +219,8 @@ class RedLineFollowingController:
                     self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
                     self.robot.SPEED = self.SPEED
 
-                angle = self.WHEEL_CENTER + offset * self.STEERING_GAIN
+                steer_offset = -offset if self.STEERING_INVERT else offset
+                angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
