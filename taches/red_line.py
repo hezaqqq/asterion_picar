@@ -27,7 +27,7 @@ class RedLineFollowingController:
 
     WHEEL_CENTER      = 100
     HEAD_PAN_CENTER   = 100
-    HEAD_TILT_ANGLE   = 150
+    HEAD_TILT_ANGLE   = 70
 
     ANGLE_MIN         = 60
     ANGLE_MAX         = 140
@@ -55,6 +55,8 @@ class RedLineFollowingController:
         self.robot   = robot.RobotController()
         self.servos  = servo.ServoController()
         self.camera_id = camera_id
+        if debug_stream and not HAS_FLASK:
+            print("Flask n'est pas installé, debug_stream désactivé (pip install flask)")
         self.debug_stream = debug_stream and HAS_FLASK
         self.debug_port = debug_port
 
@@ -157,7 +159,12 @@ class RedLineFollowingController:
             return Response(gen_stream(),
                              mimetype='multipart/x-mixed-replace; boundary=frame')
 
-        app.run(host='0.0.0.0', port=self.debug_port, debug=False, use_reloader=False)
+        print(f"Serveur de debug démarré sur http://0.0.0.0:{self.debug_port}")
+        try:
+            app.run(host='0.0.0.0', port=self.debug_port, debug=False,
+                    use_reloader=False, threaded=True)
+        except Exception as e:
+            print(f"Erreur serveur de debug: {e}")
 
     def _search_for_line(self, search_started_at):
         elapsed = time.time() - search_started_at
