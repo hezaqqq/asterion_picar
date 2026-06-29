@@ -33,13 +33,8 @@ class RedLineFollowingController:
     ANGLE_MAX         = 160
     STEERING_GAIN     = 60
     STEERING_INVERT   = True
-    # Si le robot dérive vers la GAUCHE  → augmente la valeur (ex: 0.05, 0.10…)
-    # Si le robot dérive vers la DROITE  → baisse la valeur  (ex: -0.05, -0.10…)
     OFFSET_BIAS       = 0.05
-
-    # Amplitude max de rotation de la tête quand les roues sont au maximum.
-    # Augmente pour une tête qui tourne plus, baisse pour moins.
-    HEAD_PAN_GAIN     = 20     # degrés
+    HEAD_PAN_GAIN     = 20
 
     SPEED = 0.3
 
@@ -175,27 +170,6 @@ class RedLineFollowingController:
         except Exception as e:
             print(f"Erreur serveur de debug: {e}")
 
-    def _search_for_line(self, search_started_at):
-        elapsed = time.time() - search_started_at
-
-        sweep_period = (2 * self.SEARCH_PAN_AMPLITUDE) / self.SEARCH_PAN_SPEED * 2
-        phase = (elapsed % sweep_period) / sweep_period
-        if phase < 0.5:
-            pan_offset = -self.SEARCH_PAN_AMPLITUDE + (4 * self.SEARCH_PAN_AMPLITUDE * phase)
-        else:
-            pan_offset = (3 * self.SEARCH_PAN_AMPLITUDE) - (4 * self.SEARCH_PAN_AMPLITUDE * phase)
-
-        pan_angle = self._clamp_angle(self.HEAD_PAN_CENTER + pan_offset)
-        self.servos.set_angle(self.HEAD_PAN_CHANNEL, pan_angle)
-
-        if hasattr(self.robot, "spin"):
-            self.robot.spin(self.SEARCH_SPIN_SPEED)
-        elif not self.robot.moving:
-            self.robot.SPEED = self.SEARCH_SPIN_SPEED
-            self.robot.start()
-
-        return elapsed > self.SEARCH_GIVE_UP_TIME
-
     def _follow_loop(self):
         self.servos.set_angle(self.HEAD_TILT_CHANNEL, self.HEAD_TILT_ANGLE)
         self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
@@ -206,11 +180,6 @@ class RedLineFollowingController:
         self.robot.SPEED = self.SPEED
         self.robot.start()
 
-        line_lost_since = None
-        searching = False
-        search_started_at = None
-        gave_up = False
-
         while self._running:
             frame = self._read_frame()
             if frame is None:
@@ -219,47 +188,24 @@ class RedLineFollowingController:
             offset, annotated = self._find_line_offset(frame)
 
             if offset is not None:
-                line_lost_since = None
-                if searching:
-                    searching = False
-                    search_started_at = None
-                    gave_up = False
-                    self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
-                    self.robot.SPEED = self.SPEED
-
                 steer_offset = -offset if self.STEERING_INVERT else offset
                 angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
-                # ── Tête qui suit la direction des roues ─────────────────────
-                # steer_offset est positif quand on tourne à droite (roues à droite)
-                # → la tête tourne dans le même sens
                 head_pan = self.HEAD_PAN_CENTER + steer_offset * self.HEAD_PAN_GAIN
                 head_pan = self._clamp_angle(head_pan)
                 self.servos.set_angle(self.HEAD_PAN_CHANNEL, head_pan)
-                # ─────────────────────────────────────────────────────────────
 
                 if not self.robot.moving:
                     self.robot.start()
 
             else:
-                if line_lost_since is None:
-                    line_lost_since = time.time()
-
-                elapsed = time.time() - line_lost_since
-
-                if elapsed > self.LINE_LOST_TIMEOUT:
-                    self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
-
-                    if not searching:
-                        searching = True
-                        search_started_at = time.time()
-
-                    if not gave_up:
-                        gave_up = self._search_for_line(search_started_at)
-                    elif self.robot.moving:
-                        self.robot.stop()
+                # Plus de rouge → arrêt immédiat + recentrage
+                if self.robot.moving:
+                    self.robot.stop()
+                self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
+                self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
 
             if self.debug_stream:
                 with self._frame_lock:
@@ -303,6 +249,7 @@ def run():
     try:
         controller.start()
     except KeyboardInterrupt:
+        robot.stop()
         controller.stop()
 
 
