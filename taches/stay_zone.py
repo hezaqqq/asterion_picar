@@ -128,7 +128,7 @@ class StayInZone:
     def run(self):
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.servos.set_angle(1, 54)
-        self.servos.set_angle(2, 75)
+        self.servos.set_angle(2, 90)
         self.robot.SPEED = self.SPEED_STRAIGHT
         self.robot.start()
 
