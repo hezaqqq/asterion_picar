@@ -43,6 +43,11 @@ class RedLineFollowingController:
 
     LINE_LOST_TIMEOUT = 1.2
 
+    SEARCH_PAN_AMPLITUDE = 25
+    SEARCH_PAN_SPEED     = 40
+    SEARCH_SPIN_SPEED    = 0.2
+    SEARCH_GIVE_UP_TIME  = 6.0
+
     CAMERA_SIZE = (640, 480)
     ROI_TOP_RATIO = 0.5
 
@@ -154,6 +159,27 @@ class RedLineFollowingController:
 
         app.run(host='0.0.0.0', port=self.debug_port, debug=False, use_reloader=False)
 
+    def _search_for_line(self, search_started_at):
+        elapsed = time.time() - search_started_at
+
+        sweep_period = (2 * self.SEARCH_PAN_AMPLITUDE) / self.SEARCH_PAN_SPEED * 2
+        phase = (elapsed % sweep_period) / sweep_period
+        if phase < 0.5:
+            pan_offset = -self.SEARCH_PAN_AMPLITUDE + (4 * self.SEARCH_PAN_AMPLITUDE * phase)
+        else:
+            pan_offset = (3 * self.SEARCH_PAN_AMPLITUDE) - (4 * self.SEARCH_PAN_AMPLITUDE * phase)
+
+        pan_angle = self._clamp_angle(self.HEAD_PAN_CENTER + pan_offset)
+        self.servos.set_angle(self.HEAD_PAN_CHANNEL, pan_angle)
+
+        if hasattr(self.robot, "spin"):
+            self.robot.spin(self.SEARCH_SPIN_SPEED)
+        elif not self.robot.moving:
+            self.robot.SPEED = self.SEARCH_SPIN_SPEED
+            self.robot.start()
+
+        return elapsed > self.SEARCH_GIVE_UP_TIME
+
     def _follow_loop(self):
         self.servos.set_angle(self.HEAD_TILT_CHANNEL, self.HEAD_TILT_ANGLE)
         self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
@@ -165,6 +191,9 @@ class RedLineFollowingController:
         self.robot.start()
 
         line_lost_since = None
+        searching = False
+        search_started_at = None
+        gave_up = False
 
         while self._running:
             frame = self._read_frame()
@@ -175,6 +204,12 @@ class RedLineFollowingController:
 
             if offset is not None:
                 line_lost_since = None
+                if searching:
+                    searching = False
+                    search_started_at = None
+                    gave_up = False
+                    self.servos.set_angle(self.HEAD_PAN_CHANNEL, self.HEAD_PAN_CENTER)
+                    self.robot.SPEED = self.SPEED
 
                 angle = self.WHEEL_CENTER + offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
@@ -191,7 +226,14 @@ class RedLineFollowingController:
 
                 if elapsed > self.LINE_LOST_TIMEOUT:
                     self.servos.set_angle(self.WHEEL_CHANNEL, self.WHEEL_CENTER)
-                    if self.robot.moving:
+
+                    if not searching:
+                        searching = True
+                        search_started_at = time.time()
+
+                    if not gave_up:
+                        gave_up = self._search_for_line(search_started_at)
+                    elif self.robot.moving:
                         self.robot.stop()
 
             if self.debug_stream:
