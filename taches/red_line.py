@@ -33,8 +33,11 @@ class RedLineFollowingController:
     ANGLE_MAX         = 150
     STEERING_GAIN     = 60
     STEERING_INVERT   = True
-    OFFSET_BIAS       = 0.0
+    
+    # Set to True to flip the head movement so it turns the same side as the wheels
+    HEAD_PAN_INVERT   = True 
     HEAD_FOLLOW_GAIN  = 15
+    OFFSET_BIAS       = 0.0
 
     SPEED = 0.3
 
@@ -227,7 +230,9 @@ class RedLineFollowingController:
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
-                pan_angle = self.HEAD_PAN_CENTER + steer_offset * self.HEAD_FOLLOW_GAIN
+                # Adjusted head tracking logic to sync direction with the wheels
+                head_offset = -steer_offset if self.HEAD_PAN_INVERT else steer_offset
+                pan_angle = self.HEAD_PAN_CENTER + head_offset * self.HEAD_FOLLOW_GAIN
                 pan_angle = self._clamp_angle(pan_angle)
                 self.servos.set_angle(self.HEAD_PAN_CHANNEL, pan_angle)
 
