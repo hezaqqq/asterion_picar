@@ -26,7 +26,7 @@ class RedLineFollowingController:
     HEAD_TILT_CHANNEL = 2
 
     WHEEL_CENTER      = 100
-    HEAD_PAN_CENTER   = 110
+    HEAD_PAN_CENTER   = 90
     HEAD_TILT_ANGLE   = 70
 
     ANGLE_MIN         = 50
