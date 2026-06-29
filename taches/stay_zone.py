@@ -93,30 +93,30 @@ class StayInZone:
         if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant
             self.servos.set_angle(0, 140)
-            time.sleep(2)
+            time.sleep(1.25)
             self.servos.set_angle(0, 60)
-            time.sleep(2)
+            time.sleep(1.25)
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
             self.servos.set_angle(0, 60)
-            time.sleep(2)
+            time.sleep(1.25)
             self.servos.set_angle(0, 140)
-            time.sleep(2)
+            time.sleep(1.25)
 
         elif self._angle_tete_gd == 54:
             # Centre-gauche → recul, roues à gauche, puis avance
             self.servos.set_angle(0, 140)
-            time.sleep(3)
+            time.sleep(2)
             self.servos.set_angle(0, 60)
-            time.sleep(3)
+            time.sleep(2)
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
             self.servos.set_angle(0, 60)
-            time.sleep(3)
+            time.sleep(2)
             self.servos.set_angle(0, 140)
-            time.sleep(3)
+            time.sleep(2)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
