@@ -14,13 +14,13 @@ class StayInZone:
     ANGLE_MIN_TETE_GD    = 18
     ANGLE_MAX_TETE_GD    = 162
 
-    SPEED_STRAIGHT = 0.15
+    SPEED_STRAIGHT = 0.1
     SPEED_CURVE    = 0.2
 
     REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 250
+    OBSTACLE_DIST_MM = 275
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
