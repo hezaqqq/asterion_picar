@@ -26,18 +26,20 @@ class RedLineFollowingController:
     HEAD_TILT_CHANNEL = 2
 
     WHEEL_CENTER      = 100
-    HEAD_PAN_CENTER   = 110
+    HEAD_PAN_CENTER   = 85
     HEAD_TILT_ANGLE   = 70
 
-    ANGLE_MIN         = 50
-    ANGLE_MAX         = 150
+    ANGLE_MIN         = 40
+    ANGLE_MAX         = 160
     STEERING_GAIN     = 60
     STEERING_INVERT   = True
-    
-    # Set to True to flip the head movement so it turns the same side as the wheels
-    HEAD_PAN_INVERT   = False 
-    HEAD_FOLLOW_GAIN  = 15
-    OFFSET_BIAS       = 0.0
+    # Si le robot dérive vers la GAUCHE  → augmente la valeur (ex: 0.05, 0.10…)
+    # Si le robot dérive vers la DROITE  → baisse la valeur  (ex: -0.05, -0.10…)
+    OFFSET_BIAS       = 0.05
+
+    # Amplitude max de rotation de la tête quand les roues sont au maximum.
+    # Augmente pour une tête qui tourne plus, baisse pour moins.
+    HEAD_PAN_GAIN     = 20     # degrés
 
     SPEED = 0.3
 
@@ -230,11 +232,13 @@ class RedLineFollowingController:
                 angle = self._clamp_angle(angle)
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
-                # Adjusted head tracking logic to sync direction with the wheels
-                head_offset = -steer_offset if self.HEAD_PAN_INVERT else steer_offset
-                pan_angle = self.HEAD_PAN_CENTER + head_offset * self.HEAD_FOLLOW_GAIN
-                pan_angle = self._clamp_angle(pan_angle)
-                self.servos.set_angle(self.HEAD_PAN_CHANNEL, pan_angle)
+                # ── Tête qui suit la direction des roues ─────────────────────
+                # steer_offset est positif quand on tourne à droite (roues à droite)
+                # → la tête tourne dans le même sens
+                head_pan = self.HEAD_PAN_CENTER + steer_offset * self.HEAD_PAN_GAIN
+                head_pan = self._clamp_angle(head_pan)
+                self.servos.set_angle(self.HEAD_PAN_CHANNEL, head_pan)
+                # ─────────────────────────────────────────────────────────────
 
                 if not self.robot.moving:
                     self.robot.start()
