@@ -29,8 +29,8 @@ class RedLineFollowingController:
     HEAD_PAN_CENTER   = 110
     HEAD_TILT_ANGLE   = 70
 
-    ANGLE_MIN         = 50
-    ANGLE_MAX         = 150
+    ANGLE_MIN         = 40
+    ANGLE_MAX         = 160
     STEERING_GAIN     = 45
     STEERING_INVERT   = True
 
