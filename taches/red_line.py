@@ -32,7 +32,7 @@ class RedLineFollowingController:
     ANGLE_MIN         = 60
     ANGLE_MAX         = 140
     STEERING_GAIN     = 30
-    STEERING_INVERT   = False
+    STEERING_INVERT   = True
 
     SPEED = 0.3
 
@@ -222,7 +222,6 @@ class RedLineFollowingController:
                 steer_offset = -offset if self.STEERING_INVERT else offset
                 angle = self.WHEEL_CENTER + steer_offset * self.STEERING_GAIN
                 angle = self._clamp_angle(angle)
-                print(f"offset={offset:.2f} angle={angle:.1f}")
                 self.servos.set_angle(self.WHEEL_CHANNEL, angle)
 
                 if not self.robot.moving:
@@ -281,8 +280,6 @@ class RedLineFollowingController:
         time.sleep(0.2)
         self.servos.release()
         self.robot.stop()
-        if hasattr(self.robot, "hazard_off"):
-            self.robot.hazard_off()
 
 
 def run():
