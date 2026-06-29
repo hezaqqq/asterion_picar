@@ -29,10 +29,11 @@ class RedLineFollowingController:
     HEAD_PAN_CENTER   = 110
     HEAD_TILT_ANGLE   = 70
 
-    ANGLE_MIN         = 40
-    ANGLE_MAX         = 160
-    STEERING_GAIN     = 45
+    ANGLE_MIN         = 50
+    ANGLE_MAX         = 150
+    STEERING_GAIN     = 60
     STEERING_INVERT   = True
+    OFFSET_BIAS       = 0.0
 
     SPEED = 0.3
 
@@ -56,6 +57,8 @@ class RedLineFollowingController:
         self.robot   = robot.RobotController()
         self.servos  = servo.ServoController()
         self.camera_id = camera_id
+        if debug_stream and not HAS_FLASK:
+            print("Flask n'est pas installé, debug_stream désactivé (pip install flask)")
         self.debug_stream = debug_stream and HAS_FLASK
         self.debug_port = debug_port
 
@@ -124,6 +127,7 @@ class RedLineFollowingController:
         cx = int(M["m10"] / M["m00"])
         cy = int(M["m01"] / M["m00"])
         offset = (cx - (w / 2)) / (w / 2)
+        offset -= self.OFFSET_BIAS
 
         cv2.drawContours(roi, [c], -1, (0, 255, 0), 2)
         cv2.circle(roi, (cx, cy), 6, (255, 0, 0), -1)
@@ -285,9 +289,7 @@ def run():
     try:
         controller.start()
     except KeyboardInterrupt:
-            pass
-    finally:
-        robot.stop()
+        controller.stop()
 
 
 if __name__ == "__main__":
