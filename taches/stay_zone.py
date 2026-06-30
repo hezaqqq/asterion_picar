@@ -14,8 +14,8 @@ class StayInZone:
     ANGLE_MIN_TETE_GD    = 18
     ANGLE_MAX_TETE_GD    = 162
 
-    SPEED_STRAIGHT = 0.2
-    SPEED_CURVE    = 0.25
+    SPEED_STRAIGHT = 0.15
+    SPEED_CURVE    = 0.2
 
     REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
@@ -97,7 +97,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_CURVE)
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
@@ -112,7 +112,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_CURVE)
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
@@ -127,7 +127,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_CURVE)
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
@@ -142,7 +142,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_CURVE)
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
