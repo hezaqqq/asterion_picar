@@ -85,7 +85,7 @@ class StayInZone:
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
-        time.sleep(0.15)
+        time.sleep(0.25)
 
     def _check_obstacle(self) -> bool:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
@@ -96,18 +96,19 @@ class StayInZone:
 
         if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant
-            self._angle_tete_gd = 114
-            self.servos.set_angle(1, self._angle_tete_gd)
+            
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
+            self._angle_tete_gd = 114
+            self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
-            self.servos.set_angle(0, 135)
+            self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
             time.sleep(self.SLEEP_EXT1)
-            self.servos.set_angle(0, 65)
+            self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_EXT2)
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -115,18 +116,19 @@ class StayInZone:
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
-            self._angle_tete_gd = 66
-            self.servos.set_angle(1, self._angle_tete_gd)
+            
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
+            self._angle_tete_gd = 66
+            self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
-            self.servos.set_angle(0, 65)
+            self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
             time.sleep(self.SLEEP_EXT1)
-            self.servos.set_angle(0, 135)
+            self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_EXT2)
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -134,18 +136,19 @@ class StayInZone:
 
         elif self._angle_tete_gd == 66:
             # Centre-gauche → recul, roues à gauche, puis avance
-            self._angle_tete_gd = 114
-            self.servos.set_angle(1, self._angle_tete_gd)
+            
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
+            self._angle_tete_gd = 114
+            self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
-            self.servos.set_angle(0, 135)
+            self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
             time.sleep(self.SLEEP_CENTRE1)
-            self.servos.set_angle(0, 65)
+            self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_CENTRE2)
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -153,18 +156,19 @@ class StayInZone:
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
-            self._angle_tete_gd = 66
-            self.servos.set_angle(1, self._angle_tete_gd)
+            
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
+            self._angle_tete_gd = 66
+            self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
-            self.servos.set_angle(0, 65)
+            self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
             time.sleep(self.SLEEP_CENTRE1)
-            self.servos.set_angle(0, 135)
+            self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE2)
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
