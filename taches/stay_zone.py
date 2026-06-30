@@ -22,8 +22,10 @@ class StayInZone:
 
     OBSTACLE_DIST_MM = 275
 
-    SLEEP_CENTRE = 2
-    SLEEP_EXT = 2
+    SLEEP_CENTRE1 = 2.5
+    SLEEP_CENTRE2 = 2.5
+    SLEEP_EXT1 = 2.5
+    SLEEP_EXT2 = 2.5
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
@@ -102,9 +104,9 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT+1)
+            time.sleep(self.SLEEP_EXT1)
             self.servos.set_angle(0, 60)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_EXT2)
             self._angle_tete_gd = 114
 
         elif self._angle_tete_gd == 162:
@@ -117,9 +119,9 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT+1)
+            time.sleep(self.SLEEP_EXT1)
             self.servos.set_angle(0, 140)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_EXT2)
             self._angle_tete_gd = 66
 
         elif self._angle_tete_gd == 66:
@@ -132,9 +134,9 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_CENTRE+1)
+            time.sleep(self.SLEEP_CENTRE1)
             self.servos.set_angle(0, 60)
-            time.sleep(self.SLEEP_CENTRE)
+            time.sleep(self.SLEEP_CENTRE2)
             self._angle_tete_gd = 114
 
         else:
@@ -147,9 +149,9 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_CENTRE+1)
+            time.sleep(self.SLEEP_CENTRE1)
             self.servos.set_angle(0, 140)
-            time.sleep(self.SLEEP_CENTRE)
+            time.sleep(self.SLEEP_CENTRE2)
             self._angle_tete_gd = 66
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
