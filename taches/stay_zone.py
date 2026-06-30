@@ -75,11 +75,11 @@ class StayInZone:
     # ── Tête + obstacle ───────────────────────────────────────────────
     def _sweep_head(self):
         if self._gauche:
-            self._angle_tete_gd += 36
+            self._angle_tete_gd += 48
             if self._angle_tete_gd >= self.ANGLE_MAX_TETE_GD:
                 self._gauche = False
         else:
-            self._angle_tete_gd -= 36
+            self._angle_tete_gd -= 48
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
@@ -105,6 +105,7 @@ class StayInZone:
             time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_EXT)
+            self._angle_tete_gd = 162
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
@@ -119,13 +120,15 @@ class StayInZone:
             time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_EXT)
+            self._angle_tete_gd = 126
 
-        elif self._angle_tete_gd == 54:
+        elif self._angle_tete_gd == 66:
             # Centre-gauche → recul, roues à gauche, puis avance
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_CENTRE)
+            self._angle_tete_gd = 114
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
@@ -133,6 +136,7 @@ class StayInZone:
             time.sleep(self.SLEEP_CENTRE)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE)
+            self._angle_tete_gd = 66
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
