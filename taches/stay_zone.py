@@ -15,7 +15,7 @@ class StayInZone:
     ANGLE_MAX_TETE_GD    = 162
 
     SPEED_STRAIGHT = 0.15
-    SPEED_CURVE    = 0.2
+    SPEED_CURVE    = 0.25
 
     REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
