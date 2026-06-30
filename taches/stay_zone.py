@@ -107,6 +107,8 @@ class StayInZone:
             time.sleep(self.SLEEP_EXT1)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_EXT2)
+            self.robot.stop()
+            self.robot.start(self.SPEED_STRAIGHT)
             self._angle_tete_gd = 114
 
         elif self._angle_tete_gd == 162:
@@ -122,6 +124,8 @@ class StayInZone:
             time.sleep(self.SLEEP_EXT1)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_EXT2)
+            self.robot.stop()
+            self.robot.start(self.SPEED_STRAIGHT)
             self._angle_tete_gd = 66
 
         elif self._angle_tete_gd == 66:
@@ -137,6 +141,8 @@ class StayInZone:
             time.sleep(self.SLEEP_CENTRE1)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_CENTRE2)
+            self.robot.stop()
+            self.robot.start(self.SPEED_STRAIGHT)
             self._angle_tete_gd = 114
 
         else:
@@ -152,6 +158,8 @@ class StayInZone:
             time.sleep(self.SLEEP_CENTRE1)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE2)
+            self.robot.stop()
+            self.robot.start(self.SPEED_STRAIGHT)
             self._angle_tete_gd = 66
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
