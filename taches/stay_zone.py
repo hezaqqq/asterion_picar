@@ -22,6 +22,9 @@ class StayInZone:
 
     OBSTACLE_DIST_MM = 275
 
+    SLEEP_CENTRE = 2
+    SLEEP_EXT = 2
+
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
         self.robot     = robot_module.RobotController(sensor=self.sensor, auto_watch=False)
@@ -99,9 +102,9 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 60)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_EXT)
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant
@@ -113,23 +116,23 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 140)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_EXT)
 
         elif self._angle_tete_gd == 54:
             # Centre-gauche → recul, roues à gauche, puis avance
             self.servos.set_angle(0, 140)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_CENTRE)
             self.servos.set_angle(0, 60)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_CENTRE)
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
             self.servos.set_angle(0, 60)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_CENTRE)
             self.servos.set_angle(0, 140)
-            time.sleep(1.25)
+            time.sleep(self.SLEEP_CENTRE)
 
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
         self.robot.SPEED = self.SPEED_STRAIGHT
