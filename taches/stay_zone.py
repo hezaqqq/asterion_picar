@@ -20,7 +20,7 @@ class StayInZone:
     REVERSE_TIME   = 2.25
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 275
+    OBSTACLE_DIST_MM = 235
 
     SLEEP_CENTRE1 = 2.25
     SLEEP_CENTRE2 = 2.25
@@ -44,7 +44,7 @@ class StayInZone:
         self.servos.set_angle(0, steer_angle)
         time.sleep(0.1)
 
-        self.robot.motors.drive(-self.SPEED_CURVE, ramp_time=self.RAMP_TIME)
+        self.robot.motors.drive(-self.SPEED_STRAIGHT, ramp_time=self.RAMP_TIME)
         time.sleep(self.REVERSE_TIME)
 
         self.robot.stop()
@@ -92,7 +92,7 @@ class StayInZone:
             return False
 
         if not self.robot.moving:
-            self.robot.start(self.SPEED_CURVE)
+            self.robot.start(self.SPEED_STRAIGHT)
 
         if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant
