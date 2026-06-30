@@ -124,16 +124,30 @@ class StayInZone:
 
         elif self._angle_tete_gd == 66:
             # Centre-gauche → recul, roues à gauche, puis avance
+            self.robot.stop()
+            time.sleep(0.05)
+            self.robot.start(-self.SPEED_CURVE)
+            time.sleep(0.5)
+            self.robot.stop()
+            time.sleep(0.05)
             self.servos.set_angle(0, 140)
-            time.sleep(self.SLEEP_CENTRE)
+            self.robot.start(self.SPEED_CURVE)
+            time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_CENTRE)
             self._angle_tete_gd = 114
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
+            self.robot.stop()
+            time.sleep(0.05)
+            self.robot.start(-self.SPEED_CURVE)
+            time.sleep(0.5)
+            self.robot.stop()
+            time.sleep(0.05)
             self.servos.set_angle(0, 60)
-            time.sleep(self.SLEEP_CENTRE)
+            self.robot.start(self.SPEED_CURVE)
+            time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE)
             self._angle_tete_gd = 66
