@@ -22,10 +22,10 @@ class StayInZone:
 
     OBSTACLE_DIST_MM = 275
 
-    SLEEP_CENTRE1 = 2.5
-    SLEEP_CENTRE2 = 2.5
-    SLEEP_EXT1 = 2.5
-    SLEEP_EXT2 = 2.5
+    SLEEP_CENTRE1 = 2.25
+    SLEEP_CENTRE2 = 2.25
+    SLEEP_EXT1 = 2.25
+    SLEEP_EXT2 = 2.25
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
@@ -98,7 +98,7 @@ class StayInZone:
             # Gauche extrême → contourne par la droite, en avançant
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_CURVE)
+            self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
@@ -113,7 +113,7 @@ class StayInZone:
             # Droite extrême → contourne par la gauche, en avançant
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_CURVE)
+            self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
@@ -128,7 +128,7 @@ class StayInZone:
             # Centre-gauche → recul, roues à gauche, puis avance
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_CURVE)
+            self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
@@ -143,7 +143,7 @@ class StayInZone:
             # Centre-droite → recul, roues à droite, puis avance
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_CURVE)
+            self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             self.robot.stop()
             time.sleep(0.05)
