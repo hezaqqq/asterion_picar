@@ -120,7 +120,7 @@ class StayInZone:
             time.sleep(self.SLEEP_EXT)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_EXT)
-            self._angle_tete_gd = 126
+            self._angle_tete_gd = 18
 
         elif self._angle_tete_gd == 66:
             # Centre-gauche → recul, roues à gauche, puis avance
