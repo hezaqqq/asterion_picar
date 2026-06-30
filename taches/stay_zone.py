@@ -102,7 +102,7 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_EXT+1)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_EXT)
             self._angle_tete_gd = 114
@@ -117,7 +117,7 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_EXT+1)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_EXT)
             self._angle_tete_gd = 66
@@ -132,7 +132,7 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 140)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_CENTRE+1)
             self.servos.set_angle(0, 60)
             time.sleep(self.SLEEP_CENTRE)
             self._angle_tete_gd = 114
@@ -147,7 +147,7 @@ class StayInZone:
             time.sleep(0.05)
             self.servos.set_angle(0, 60)
             self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT)
+            time.sleep(self.SLEEP_CENTRE+1)
             self.servos.set_angle(0, 140)
             time.sleep(self.SLEEP_CENTRE)
             self._angle_tete_gd = 66
