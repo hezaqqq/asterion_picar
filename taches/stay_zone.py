@@ -20,7 +20,7 @@ class StayInZone:
     REVERSE_TIME   = 4
     RAMP_TIME      = 0.2
 
-    OBSTACLE_DIST_MM = 225
+    OBSTACLE_DIST_MM = 200
 
     SLEEP_CENTRE1 = 1.6
     SLEEP_CENTRE2 = 1.75
