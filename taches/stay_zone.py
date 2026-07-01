@@ -136,7 +136,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.4)
             self.robot.stop()
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
@@ -155,7 +155,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.4)
             self.robot.stop()
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
