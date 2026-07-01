@@ -22,10 +22,10 @@ class StayInZone:
 
     OBSTACLE_DIST_MM = 225
 
-    SLEEP_CENTRE1 = 1.6
-    SLEEP_CENTRE2 = 1.75
-    SLEEP_EXT1 = 1.6
-    SLEEP_EXT2 = 1.75
+    SLEEP_CENTRE1 = 0.35
+    SLEEP_CENTRE2 = 0.35
+    SLEEP_EXT1 = 0.75
+    SLEEP_EXT2 = 0.75
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
@@ -109,10 +109,10 @@ class StayInZone:
             time.sleep(0.2)
             
 
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
             
             
             self.robot.stop()
@@ -128,10 +128,10 @@ class StayInZone:
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
 
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
             
             
             self.robot.stop()
@@ -147,10 +147,10 @@ class StayInZone:
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
 
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
 
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -165,10 +165,10 @@ class StayInZone:
             self.robot.start(-self.SPEED_STRAIGHT)
             time.sleep(0.2)
             
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, 0.75)
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
             
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
