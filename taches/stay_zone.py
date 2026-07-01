@@ -50,8 +50,7 @@ class StayInZone:
         self.robot.stop()
         time.sleep(0.1)
         self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
-        self.robot.SPEED = self.SPEED_STRAIGHT
-        self.robot.start()
+        self.robot.start(self.SPEED_STRAIGHT)
 
     def _check_line(self) -> bool:
         """Retourne True si une action de recul a été déclenchée (ligne détectée)."""
@@ -98,9 +97,7 @@ class StayInZone:
             # Gauche extrême → contourne par la droite, en avançant           
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
-            self.robot.stop()
+            
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
@@ -117,9 +114,7 @@ class StayInZone:
             # Droite extrême → contourne par la gauche, en avançant            
             self.robot.stop()
             time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
-            self.robot.stop()
+            
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
             time.sleep(0.05)
