@@ -22,8 +22,8 @@ class StayInZone:
 
     OBSTACLE_DIST_MM = 225
 
-    SLEEP_CENTRE1 = 0.35
-    SLEEP_CENTRE2 = 0.35
+    SLEEP_CENTRE1 = 0.2
+    SLEEP_CENTRE2 = 0.2
     SLEEP_EXT1 = 0.75
     SLEEP_EXT2 = 0.75
 
