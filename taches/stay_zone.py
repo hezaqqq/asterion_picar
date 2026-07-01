@@ -104,10 +104,10 @@ class StayInZone:
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
 
-            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
             
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -118,10 +118,10 @@ class StayInZone:
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
 
-            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
             
             
             self.robot.stop()
@@ -133,10 +133,10 @@ class StayInZone:
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
             
-            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
 
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
@@ -147,10 +147,10 @@ class StayInZone:
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
             
-            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
-            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
-            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
 
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
