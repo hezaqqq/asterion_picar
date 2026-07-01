@@ -24,7 +24,7 @@ class StayInZone:
 
     SLEEP_CENTRE1 = 1.6
     SLEEP_CENTRE2 = 1.95
-    SLEEP_EXT1 = 1.4
+    SLEEP_EXT1 = 1.6
     SLEEP_EXT2 = 1.95
 
     def __init__(self):
@@ -98,7 +98,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.4)
             self.robot.stop()
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
@@ -117,7 +117,7 @@ class StayInZone:
             self.robot.stop()
             time.sleep(0.05)
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.4)
             self.robot.stop()
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
