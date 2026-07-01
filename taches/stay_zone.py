@@ -15,17 +15,17 @@ class StayInZone:
     ANGLE_MAX_TETE_GD    = 162
 
     SPEED_STRAIGHT = 0.15
-    SPEED_CURVE    = 0.25
+    SPEED_CURVE    = 0.3
 
-    REVERSE_TIME   = 4
+    REVERSE_TIME   = 2
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 225
 
     SLEEP_CENTRE1 = 1.6
-    SLEEP_CENTRE2 = 1.95
+    SLEEP_CENTRE2 = 2.1
     SLEEP_EXT1 = 1.6
-    SLEEP_EXT2 = 1.95
+    SLEEP_EXT2 = 2.1
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
@@ -84,7 +84,7 @@ class StayInZone:
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     def _check_obstacle(self) -> bool:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
