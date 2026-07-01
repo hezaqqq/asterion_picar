@@ -84,7 +84,7 @@ class StayInZone:
             if self._angle_tete_gd <= self.ANGLE_MIN_TETE_GD:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
-        time.sleep(0.2)
+        time.sleep(0.15)
     
     def _turn(self, angle : int, speed: float, duration: float):
         self.robot.stop()
