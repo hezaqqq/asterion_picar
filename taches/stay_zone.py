@@ -23,9 +23,9 @@ class StayInZone:
     OBSTACLE_DIST_MM = 200
 
     SLEEP_CENTRE1 = 1.6
-    SLEEP_CENTRE2 = 1.5
+    SLEEP_CENTRE2 = 1.95
     SLEEP_EXT1 = 1.4
-    SLEEP_EXT2 = 1.5
+    SLEEP_EXT2 = 1.95
 
     def __init__(self):
         self.sensor    = ultrasonic_module.UltrasonicSensor()
