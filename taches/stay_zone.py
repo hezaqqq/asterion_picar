@@ -7,24 +7,24 @@ import time
 class StayInZone:
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 75
-    ANGLE_MAX_ROUE    = 135
+    ANGLE_MIN_ROUE    = 50
+    ANGLE_MAX_ROUE    = 150
 
     ANGLE_CENTER_TETE_GD = 90
     ANGLE_MIN_TETE_GD    = 18
     ANGLE_MAX_TETE_GD    = 162
 
     SPEED_STRAIGHT = 0.15
-    SPEED_CURVE    = 0.3
+    SPEED_CURVE    = 0.25
 
     REVERSE_TIME   = 2
     RAMP_TIME      = 0.2
 
     OBSTACLE_DIST_MM = 225
 
-    SLEEP_CENTRE1 = 1.4
+    SLEEP_CENTRE1 = 1.6
     SLEEP_CENTRE2 = 1.75
-    SLEEP_EXT1 = 1.4
+    SLEEP_EXT1 = 1.6
     SLEEP_EXT2 = 1.75
 
     def __init__(self):
@@ -85,6 +85,12 @@ class StayInZone:
                 self._gauche = True
         self.servos.set_angle(1, self._angle_tete_gd)
         time.sleep(0.2)
+    
+    def _turn(self, angle : int, speed: float, duration: float):
+        self.robot.stop()
+        self.servos.set_angle(0, angle)
+        self.robot.start(speed)
+        time.sleep(duration)
 
     def _check_obstacle(self) -> bool:
         if self.sensor.get_distance_mm() >= self.OBSTACLE_DIST_MM:
@@ -95,76 +101,57 @@ class StayInZone:
 
         if self._angle_tete_gd == 18:
             # Gauche extrême → contourne par la droite, en avançant           
-            self.robot.stop()
-            time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.4)
-            self.robot.stop()
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
-            time.sleep(0.05)
-            self.servos.set_angle(0, 140)
-            self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT1)
-            self.servos.set_angle(0, 60)
-            time.sleep(self.SLEEP_EXT2)
+
+            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
             
 
         elif self._angle_tete_gd == 162:
             # Droite extrême → contourne par la gauche, en avançant            
-            self.robot.stop()
-            time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.4)
-            self.robot.stop()
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
-            time.sleep(0.05)
-            self.servos.set_angle(0, 60)
-            self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_EXT1)
-            self.servos.set_angle(0, 140)
-            time.sleep(self.SLEEP_EXT2)
+
+            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            
+            
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
             
 
         elif self._angle_tete_gd == 66:
             # Centre-gauche → recul, roues à gauche, puis avance           
-            self.robot.stop()
-            time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.4)
-            self.robot.stop()
             self._angle_tete_gd = 114
             self.servos.set_angle(1, self._angle_tete_gd)
-            time.sleep(0.05)
-            self.servos.set_angle(0, 140)
-            self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_CENTRE1)
-            self.servos.set_angle(0, 60)
-            time.sleep(self.SLEEP_CENTRE2)
+            
+            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
             
 
         else:
             # Centre-droite → recul, roues à droite, puis avance
-            self.robot.stop()
-            time.sleep(0.05)
-            self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.4)
-            self.robot.stop()
             self._angle_tete_gd = 66
             self.servos.set_angle(1, self._angle_tete_gd)
-            time.sleep(0.05)
-            self.servos.set_angle(0, 60)
-            self.robot.start(self.SPEED_CURVE)
-            time.sleep(self.SLEEP_CENTRE1)
-            self.servos.set_angle(0, 140)
-            time.sleep(self.SLEEP_CENTRE2)
+            
+            self.robot._turn(self.ANGLE_MAX_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE, self.SPEED_CURVE, 0.75)
+            self.robot._turn(self.ANGLE_CENTER_ROUE- self.ANGLE_MIN_ROUE, self.SPEED_STRAIGHT, 0.75)
+            self.robot._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, 0.75)
+
             self.robot.stop()
             self.robot.start(self.SPEED_STRAIGHT)
             
