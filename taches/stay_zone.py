@@ -110,8 +110,8 @@ class StayInZone:
             
 
             self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1-0.05)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2-0.05)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE1-0.05)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE2-0.05)
             self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
             
             
@@ -129,8 +129,8 @@ class StayInZone:
             time.sleep(0.2)
 
             self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1-0.05)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2-0.05)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE1-0.05)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE2-0.05)
             self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2)
             
             
@@ -148,8 +148,8 @@ class StayInZone:
             time.sleep(0.2)
 
             self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1-0.2)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE2)
             self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2-0.2)
 
             self.robot.stop()
@@ -166,8 +166,8 @@ class StayInZone:
             time.sleep(0.2)
             
             self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1-0.2)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE1)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE, self.SLEEP_CENTRE2)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE1)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.1, self.SLEEP_CENTRE2)
             self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2-0.2)
             
             self.robot.stop()
