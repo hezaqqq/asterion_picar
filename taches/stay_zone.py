@@ -7,8 +7,8 @@ import time
 class StayInZone:
 
     ANGLE_CENTER_ROUE = 100
-    ANGLE_MIN_ROUE    = 50
-    ANGLE_MAX_ROUE    = 150
+    ANGLE_MIN_ROUE    = 55
+    ANGLE_MAX_ROUE    = 145
 
     ANGLE_CENTER_TETE_GD = 90
     ANGLE_MIN_TETE_GD    = 18
