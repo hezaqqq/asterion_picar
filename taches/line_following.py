@@ -8,8 +8,8 @@ import robot_controller as robot
 
 class LineFollowingController:
     ANGLE_CENTER   = 100
-    ANGLE_MIN      = 60
-    ANGLE_MAX      = 140
+    ANGLE_MIN      = 55
+    ANGLE_MAX      = 145
     HOLE_TIMEOUT   = 1.2   # durée max d'un trou blanc à ignorer (s)
 
     SPEED_STRAIGHT = 0.36
@@ -44,12 +44,12 @@ class LineFollowingController:
                 hole_start       = None
 
             elif r == 1 and m == 0 and l == 0:         # ligne à droite → virer à droite
-                current_angle   += 13
+                current_angle   += 15
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
             elif r == 0 and m == 0 and l == 1:         # ligne à gauche → virer à gauche
-                current_angle   -= 13
+                current_angle   -= 15
                 self.robot.SPEED = self.SPEED_CURVE
                 hole_start       = None
 
