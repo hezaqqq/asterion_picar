@@ -245,7 +245,7 @@ class StayInZone:
 
         self._running = True
         try:
-            time.sleep(2.25)
+            time.sleep(2.75)
             self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
             while self._running:
                 # Priorité 1 : rester dans la zone (la ligne prime sur l'obstacle)
