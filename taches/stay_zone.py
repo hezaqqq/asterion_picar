@@ -125,9 +125,9 @@ class StayInZone:
             return False
         
         if self.OBSTACLE_DIST_MM - 50 <= dist <= self.OBSTACLE_DIST_MM:
-            mult = 2.5
+            mult = 2.1
         elif self.OBSTACLE_DIST_MM - 100 <= dist < self.OBSTACLE_DIST_MM - 50:
-            mult = 1.75
+            mult = 1.55
         else:
             mult = 1.0
 
