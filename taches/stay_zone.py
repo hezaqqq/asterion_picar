@@ -102,7 +102,7 @@ class StayInZone:
                 self.robot.stop()
                 self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
                 self.robot.start(self.SPEED_STRAIGHT)
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
             
             if direction == "droite":
@@ -113,7 +113,7 @@ class StayInZone:
                 self.robot.stop()
                 self.servos.set_angle(0, self.ANGLE_CENTER_ROUE)
                 self.robot.start(self.SPEED_STRAIGHT)
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
         
         return False
