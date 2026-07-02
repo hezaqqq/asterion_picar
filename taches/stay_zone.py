@@ -238,7 +238,7 @@ class StayInZone:
 
     # ── Boucle principale ────────────────────────────────────────────
     def run(self):
-        self.servos.set_angle(0, self.ANGLE_MAX_ROUE-15)
+        self.servos.set_angle(0, self.ANGLE_MIN_ROUE-15)
         self.servos.set_angle(1, 54)
         self.servos.set_angle(2, 100)
         self.robot.start(self.SPEED_STRAIGHT)
