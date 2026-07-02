@@ -125,11 +125,15 @@ class StayInZone:
             return False
         
         if self.OBSTACLE_DIST_MM - 50 <= dist <= self.OBSTACLE_DIST_MM:
-            mult = 2.1
+            mult_sleep = 2
+            mult_reverse = 1.0
         elif self.OBSTACLE_DIST_MM - 100 <= dist < self.OBSTACLE_DIST_MM - 50:
-            mult = 1.55
+            mult_sleep = 1.5
+            mult_reverse = 1.25
         else:
-            mult = 1.0
+            mult_sleep = 1.0
+            mult_reverse = 1.5
+            
 
         if not self.robot.moving:
             self.robot.start(self.SPEED_STRAIGHT)
@@ -142,15 +146,15 @@ class StayInZone:
 
             self.robot.stop()
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.2*mult_reverse)
             
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1*mult)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE1-0.05)*mult)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE1-0.05)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE2-0.05)*mult)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE2-0.05)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2*mult)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2*mult_sleep)
             self._backOnTrack(direction)
             
             
@@ -166,15 +170,15 @@ class StayInZone:
 
             self.robot.stop()
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.2*mult_reverse)
 
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1*mult)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, self.SLEEP_EXT1*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE1-0.05)*mult)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE1-0.05)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE2-0.05)*mult)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, (self.SLEEP_CENTRE2-0.05)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2*mult)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, self.SLEEP_EXT2*mult_sleep)
             self._backOnTrack(direction)
             
             self.robot.stop()
@@ -189,15 +193,15 @@ class StayInZone:
 
             self.robot.stop()
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.2*mult_reverse)
 
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT1-0.2)*mult)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT1-0.2)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE1*mult)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE1*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE2*mult)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE2*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT2-0.2)*mult)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT2-0.2)*mult_sleep)
             self._backOnTrack(direction)
 
             self.robot.stop()
@@ -212,15 +216,15 @@ class StayInZone:
 
             self.robot.stop()
             self.robot.start(-self.SPEED_STRAIGHT)
-            time.sleep(0.2)
+            time.sleep(0.2*mult_reverse)
             
-            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT1-0.2)*mult)
+            self._turn(self.ANGLE_MIN_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT1-0.2)*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE1*mult)
+            self._turn(self.ANGLE_CENTER_ROUE - (self.ANGLE_CENTER_ROUE - self.ANGLE_MIN_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE1*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE2*mult)
+            self._turn(self.ANGLE_CENTER_ROUE + (self.ANGLE_MAX_ROUE - self.ANGLE_CENTER_ROUE)/2, self.SPEED_CURVE-0.05, self.SLEEP_CENTRE2*mult_sleep)
             self._backOnTrack(direction)
-            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT2-0.2)*mult)
+            self._turn(self.ANGLE_MAX_ROUE, self.SPEED_CURVE, (self.SLEEP_EXT2-0.2)*mult_sleep)
             self._backOnTrack(direction)
 
             self.robot.stop()
